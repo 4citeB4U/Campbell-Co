@@ -1,0 +1,151 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "A luxury jewelry item in the catalog.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sku": { "type": "string" },
+        "title": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "preview", "live", "unavailable", "archived"] },
+        "gender": { "type": "string", "enum": ["Men", "Women", "Unisex"] },
+        "category": { "type": "string" },
+        "subCategory": { "type": "string" },
+        "collection": { "type": "string" },
+        "price": { "type": "number" },
+        "salePrice": { "type": "number" },
+        "inventoryCount": { "type": "number" },
+        "image": { "type": "string" },
+        "galleryImages": { "type": "array", "items": { "type": "string" } },
+        "rotationFrames": { "type": "array", "items": { "type": "string" } },
+        "type": { "type": "string", "enum": ["Lab", "Natural", "Moissanite", "None"] },
+        "metal": { "type": "string" },
+        "carat": { "type": "number" },
+        "cut": { "type": "string" },
+        "clarity": { "type": "string" },
+        "colorGrade": { "type": "string" },
+        "cutGrade": { "type": "string" },
+        "certification": { "type": "string" },
+        "description": { "type": "string" },
+        "specs": { "type": "string" },
+        "narrative": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "story": { "type": "string" },
+            "emotionalIdentity": { "type": "string" },
+            "symbolism": { "type": "string" }
+          }
+        },
+        "passport": {
+          "type": "object",
+          "properties": {
+            "sourceRegion": { "type": "string" },
+            "stoneType": { "type": "string" },
+            "inspectionTimeline": { "type": "array", "items": { "type": "string" } },
+            "ownershipHistory": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "craftsmanship": { "type": "string" },
+        "conciergeNotes": { "type": "string" },
+        "stylePairing": { "type": "array", "items": { "type": "string" } },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "publishedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "status", "price", "image", "category"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "A jewelry category.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "image": { "type": "string" },
+        "order": { "type": "number" }
+      }
+    },
+    "Homepage": {
+      "title": "Homepage Configuration",
+      "description": "Content for homepage sections.",
+      "type": "object",
+      "properties": {
+        "hero": {
+          "type": "object",
+          "properties": {
+            "headline": { "type": "string" },
+            "subtitle": { "type": "string" },
+            "image": { "type": "string" }
+          }
+        },
+        "featuredWomen": { "type": "array", "items": { "type": "string" } },
+        "featuredMen": { "type": "array", "items": { "type": "string" } },
+        "trending": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "AVOKnowledge": {
+      "title": "AVO Knowledge",
+      "description": "Knowledge base for Agent AVO.",
+      "type": "object",
+      "properties": {
+        "topic": { "type": "string" },
+        "content": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A customer order.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "address": { "type": "string" },
+        "items": { "type": "array", "items": { "type": "object" } },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "verified", "processing", "shipping", "delivered"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Global store settings.",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "socialLinks": { "type": "object" }
+      }
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Collection of all items."
+    },
+    "/categories/{categoryId}": {
+      "schema": "Category",
+      "description": "Collection of categories."
+    },
+    "/homepage/config": {
+      "schema": "Homepage",
+      "description": "Singleton configuration for the homepage."
+    },
+    "/avo_knowledge/{itemId}": {
+      "schema": "AVOKnowledge",
+      "description": "Knowledge items for the AI concierge."
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Customer orders."
+    },
+    "/settings/config": {
+      "schema": "Settings",
+      "description": "Global configuration."
+    }
+  }
+}

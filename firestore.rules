@@ -1,0 +1,126 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'osirussees@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Validation Helpers ---
+    function isValidProduct(data) {
+      return data.keys().hasAll(['title', 'status', 'price', 'image', 'category']) &&
+             data.title is string && data.title.size() <= 200 &&
+             data.status in ['draft', 'preview', 'live', 'unavailable', 'archived'] &&
+             data.price is number && data.price >= 0 &&
+             data.category is string;
+    }
+
+    function isValidOrder(data) {
+      return data.keys().hasAll(['customerName', 'customerEmail', 'items', 'total', 'status']) &&
+             data.customerName is string && data.customerEmail is string &&
+             data.total is number && data.total > 0 &&
+             data.status in ['pending', 'verified', 'processing', 'shipping', 'delivered'];
+    }
+
+    // --- Collections ---
+
+    // Products
+    match /products/{productId} {
+      allow get: if existing().status in ['live', 'unavailable'] || isAdmin();
+      allow list: if (resource.data.status in ['live', 'unavailable']) || isAdmin();
+      allow create: if isAdmin() && isValidProduct(incoming());
+      allow update: if isAdmin() && isValidProduct(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // Categories
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Homepage config
+    match /homepage/config {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // AVO Knowledge
+    match /avo_knowledge/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Orders
+    match /orders/{orderId} {
+      allow get, list: if isAdmin();
+      allow create: if isValidOrder(incoming());
+      allow update: if isAdmin() && isValidOrder(incoming());
+      allow delete: if isAdmin();
+    }
+
+    // Site analytics: public create-only event stream, admin read.
+    match /site_analytics/{eventId} {
+      allow create: if incoming().keys().hasAll(['name', 'sessionId', 'path']) &&
+                    incoming().name is string &&
+                    incoming().sessionId is string &&
+                    incoming().path is string;
+      allow get, list, delete: if isAdmin();
+      allow update: if false;
+    }
+
+    // Membership and referral operations are captured here for later email automation.
+    match /member_profiles/{memberId} {
+      allow create: if isSignedIn() && request.auth.uid == memberId;
+      allow get, update: if isAdmin() || (isSignedIn() && request.auth.uid == memberId);
+      allow list, delete: if isAdmin();
+    }
+
+    match /referral_codes/{codeId} {
+      allow create, update, delete: if isAdmin();
+      allow get, list: if true;
+    }
+
+    match /email_queue/{emailId} {
+      allow create: if true;
+      allow get, list, update, delete: if isAdmin();
+    }
+
+    // Settings
+    match /settings/config {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Admins list (bootstrap)
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Only manageable via console or service account
+    }
+  }
+}
