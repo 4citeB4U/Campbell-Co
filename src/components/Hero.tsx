@@ -26,6 +26,7 @@ import { publicAssetUrl } from '../lib/publicPath';
 export default function Hero() {
   const { content } = useSiteContent();
   const hero = content.home.hero;
+  const usesVideo = hero.mediaType === 'video' && Boolean(hero.videoUrl);
 
   return (
     <section className="relative h-screen min-h-[800px] flex overflow-hidden border-b border-gray-border">
@@ -78,11 +79,22 @@ export default function Hero() {
         >
           <div className="w-[450px] h-[450px] border border-gray-border rounded-full flex items-center justify-center p-12 bg-black-pure/40 backdrop-blur-xl">
             <div className="w-full h-full border border-gold/20 rounded-full flex items-center justify-center relative overflow-hidden">
-               <img 
-                 src={publicAssetUrl(hero.image)}
-                 alt={hero.imageAlt}
-                 className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-[5s] group-hover:scale-110"
-               />
+               {usesVideo ? (
+                 <video
+                   src={publicAssetUrl(hero.videoUrl || '')}
+                   className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-[5s] group-hover:scale-110"
+                   autoPlay
+                   muted
+                   loop
+                   playsInline
+                 />
+               ) : (
+                 <img 
+                   src={publicAssetUrl(hero.image)}
+                   alt={hero.imageAlt}
+                   className="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-[5s] group-hover:scale-110"
+                 />
+               )}
                <div className="relative z-10 text-center">
                  <div className="text-4xl font-serif italic text-white mb-2 underline underline-offset-8 decoration-gold/50">{hero.featureTitle}</div>
                  <div className="text-[10px] uppercase tracking-widest text-gold font-semibold">{hero.featureSubtitle}</div>

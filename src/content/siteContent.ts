@@ -50,6 +50,8 @@ export type SiteContent = {
       secondaryCta: LinkTarget;
       image: string;
       imageAlt: string;
+      mediaType?: 'image' | 'video';
+      videoUrl?: string;
       featureTitle: string;
       featureSubtitle: string;
       priceEyebrow: string;
@@ -61,7 +63,10 @@ export type SiteContent = {
       men: ImageStoryBlock;
     };
     promo: {
-      feature: ImageStoryBlock;
+      feature: ImageStoryBlock & {
+        mediaType?: 'image' | 'video';
+        videoUrl?: string;
+      };
       popularStylesTitle: string;
       popularStyles: Array<{
         label: string;
@@ -159,6 +164,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       secondaryCta: { label: 'Enter the Vault', path: '/diamonds' },
       image: '/assets/campbell/jewelry/diamond-macro.png',
       imageAlt: 'Diamond close-up',
+      mediaType: 'image',
+      videoUrl: '',
       featureTitle: 'The Brilliant',
       featureSubtitle: 'Hand-Selected Diamonds',
       priceEyebrow: 'Excellence Starting from',
@@ -190,6 +197,8 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         body: "Premium men's collections crafted to elevate every look.",
         image: '/assets/campbell/editorial/men-collection.png',
         imageAlt: 'Promotion',
+        mediaType: 'image',
+        videoUrl: '',
         cta: { label: "Shop Men's Collections", path: '/men/rings' },
       },
       popularStylesTitle: 'Popular Styles',

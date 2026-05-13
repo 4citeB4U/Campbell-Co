@@ -143,6 +143,31 @@ export function AdminCMS() {
                           <CMSTextField label="Hero Heading" value={draft.home.hero.titleLineOne} onChange={v => updateDraft('home.hero.titleLineOne', v)} />
                           <CMSTextField label="Hero Subtext" value={draft.home.hero.body} onChange={v => updateDraft('home.hero.body', v)} />
                           <CMSTextField label="CTA Label" value={draft.home.hero.primaryCta.label} onChange={v => updateDraft('home.hero.primaryCta.label', v)} />
+                          <CMSSelectField
+                            label="Hero Media Type"
+                            value={draft.home.hero.mediaType || 'image'}
+                            options={[
+                              { label: 'Image', value: 'image' },
+                              { label: 'Video', value: 'video' },
+                            ]}
+                            onChange={v => updateDraft('home.hero.mediaType', v)}
+                          />
+                          <CMSTextField label="Hero Image URL" value={draft.home.hero.image} onChange={v => updateDraft('home.hero.image', v)} />
+                          <CMSTextField label="Hero Video URL" value={draft.home.hero.videoUrl || ''} onChange={v => updateDraft('home.hero.videoUrl', v)} />
+                       </CMSSubSection>
+
+                       <CMSSubSection title="Promo Feature Media">
+                          <CMSSelectField
+                            label="Promo Media Type"
+                            value={draft.home.promo.feature.mediaType || 'image'}
+                            options={[
+                              { label: 'Image', value: 'image' },
+                              { label: 'Video', value: 'video' },
+                            ]}
+                            onChange={v => updateDraft('home.promo.feature.mediaType', v)}
+                          />
+                          <CMSTextField label="Promo Image URL" value={draft.home.promo.feature.image} onChange={v => updateDraft('home.promo.feature.image', v)} />
+                          <CMSTextField label="Promo Video URL" value={draft.home.promo.feature.videoUrl || ''} onChange={v => updateDraft('home.promo.feature.videoUrl', v)} />
                        </CMSSubSection>
 
                        <CMSSubSection title="About Page">
@@ -235,6 +260,9 @@ export function AdminCMS() {
                         <button className="mx-auto px-10 py-4 text-[9px] uppercase tracking-[0.4em] font-black" style={{ backgroundColor: draft.theme.primaryColor, color: '#000' }}>
                            {draft.home.hero.primaryCta.label}
                         </button>
+                        <div className="border border-gold/10 bg-gold/5 p-4 text-[8px] uppercase tracking-[0.2em] text-white/45">
+                           Hero media: {draft.home.hero.mediaType || 'image'} {draft.home.hero.mediaType === 'video' ? `• ${draft.home.hero.videoUrl || 'no video selected'}` : `• ${draft.home.hero.image}`}
+                        </div>
                      </section>
 
                      {/* Overlay Indicator */}
@@ -291,6 +319,35 @@ function CMSTextArea({ label, value, onChange }: { label: string, value: string,
          rows={4}
          className="w-full bg-white/5 border border-white/5 p-3 text-[11px] text-white focus:border-gold outline-none transition-all leading-relaxed"
        />
+    </div>
+  );
+}
+
+function CMSSelectField({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: Array<{ label: string; value: string }>;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="space-y-2">
+       <label className="text-[9px] uppercase tracking-widest text-white/30 font-black">{label}</label>
+       <select
+         value={value}
+         onChange={e => onChange(e.target.value)}
+         className="w-full bg-white/5 border border-white/5 p-3 text-[11px] text-white focus:border-gold outline-none transition-all"
+       >
+         {options.map((option) => (
+           <option key={option.value} value={option.value}>
+             {option.label}
+           </option>
+         ))}
+       </select>
     </div>
   );
 }

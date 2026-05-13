@@ -27,17 +27,29 @@ import { publicAssetUrl } from '../lib/publicPath';
 export default function PromoPanel() {
   const { content } = useSiteContent();
   const promo = content.home.promo;
+  const usesVideo = promo.feature.mediaType === 'video' && Boolean(promo.feature.videoUrl);
 
   return (
     <div className="space-y-10 sticky top-32">
       {/* Hero Promo */}
       <div className="border border-gold bg-[#050505] overflow-hidden group relative">
         <div className="relative aspect-[4/5] overflow-hidden">
-          <img 
-            src={publicAssetUrl(promo.feature.image)} 
-            alt={promo.feature.imageAlt} 
-            className="w-full h-full object-cover grayscale brightness-50 group-hover:scale-110 transition-transform duration-[3s]"
-          />
+          {usesVideo ? (
+            <video
+              src={publicAssetUrl(promo.feature.videoUrl || '')}
+              className="w-full h-full object-cover grayscale brightness-50 group-hover:scale-110 transition-transform duration-[3s]"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img 
+              src={publicAssetUrl(promo.feature.image)} 
+              alt={promo.feature.imageAlt} 
+              className="w-full h-full object-cover grayscale brightness-50 group-hover:scale-110 transition-transform duration-[3s]"
+            />
+          )}
           <div className="absolute inset-0 p-8 flex flex-col justify-center items-start text-left bg-black-pure/40">
             <h3 className="text-3xl font-serif tracking-[0.15em] text-white leading-tight uppercase mb-4">
               {promo.feature.title}
