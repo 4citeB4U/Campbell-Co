@@ -13,7 +13,7 @@ import {
   XCircle,
   ExternalLink,
   Lock,
-  UnLock
+  Unlock
 } from 'lucide-react';
 
 export function AdminPartners() {
