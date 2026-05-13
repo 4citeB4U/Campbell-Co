@@ -133,6 +133,91 @@ const JournalPage = () => {
     </section>
   );
 };
+
+const LegalPage = ({
+  eyebrow,
+  title,
+  intro,
+  sections,
+}: {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  sections: Array<{ title: string; body: string }>;
+}) => {
+  return (
+    <section className="pt-40 pb-24 px-6 lg:px-20 text-white">
+      <div className="max-w-5xl mx-auto space-y-14">
+        <div className="space-y-6 text-center">
+          <span className="text-[10px] uppercase tracking-[0.7em] text-gold font-black">{eyebrow}</span>
+          <h1 className="text-5xl lg:text-7xl font-serif uppercase tracking-widest">{title}</h1>
+          <p className="text-white/50 text-sm uppercase tracking-[0.25em] leading-loose">{intro}</p>
+        </div>
+        <div className="space-y-8">
+          {sections.map((section) => (
+            <article key={section.title} className="border border-white/10 bg-[#050505] p-8 lg:p-10 space-y-4">
+              <h2 className="text-xl lg:text-2xl font-serif uppercase tracking-[0.2em] text-gold">{section.title}</h2>
+              <p className="text-white/55 text-sm uppercase tracking-[0.2em] leading-loose">{section.body}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const PrivacyPage = () => (
+  <LegalPage
+    eyebrow="Privacy"
+    title="Privacy Policy"
+    intro="A plain-language overview of how Campbell & Co. handles browsing activity, inquiries, and customer information across the storefront and internal operating system."
+    sections={[
+      {
+        title: 'Information We Collect',
+        body: 'Campbell & Co. may collect information you provide directly, including contact details, consultation requests, purchase information, and communications submitted through the site.',
+      },
+      {
+        title: 'How Information Is Used',
+        body: 'Information is used to respond to inquiries, support orders, improve the customer experience, manage operations, and maintain the performance and security of the application.',
+      },
+      {
+        title: 'Operational Services',
+        body: 'Portions of the application may rely on third-party infrastructure such as hosting, analytics, authentication, storage, and payment-related services needed to operate the platform responsibly.',
+      },
+      {
+        title: 'Customer Requests',
+        body: 'Customers may request clarification, updates, or removal of submitted information by contacting Campbell & Co. through the available concierge or support pathways.',
+      },
+    ]}
+  />
+);
+
+const TermsPage = () => (
+  <LegalPage
+    eyebrow="Terms"
+    title="Terms of Service"
+    intro="These terms describe the general expectations for using the Campbell & Co. storefront, content, and administrative services."
+    sections={[
+      {
+        title: 'Use of the Site',
+        body: 'Visitors may browse the storefront and request services for lawful personal or business purposes. Misuse, unauthorized access attempts, or interference with the platform is prohibited.',
+      },
+      {
+        title: 'Product and Content Presentation',
+        body: 'Campbell & Co. aims to present product details, imagery, availability, and guidance accurately, but offerings, pricing, and availability may change without notice.',
+      },
+      {
+        title: 'Orders and Requests',
+        body: 'Submitting a request or initiating checkout does not guarantee final acceptance. Orders, consultations, and operational actions may require confirmation, review, or follow-up communication.',
+      },
+      {
+        title: 'Platform Governance',
+        body: 'The application is maintained under LeeWay Standards for structured governance, technical continuity, and operational control. Administrative access is restricted to authorized users only.',
+      },
+    ]}
+  />
+);
+
 const BusinessCardPage = () => <div className="pt-40 px-20 text-white font-serif text-4xl text-center pb-20"><img src={publicAssetUrl('/assets/campbell/business-card/card-front.png')} className="max-w-md mx-auto border border-gold" alt="Business Card" /><p className="mt-10 uppercase tracking-[0.5em] text-gold text-[10px]">Digital Artifact</p></div>;
 const AdminRedirect = () => {
   React.useEffect(() => {
@@ -188,6 +273,8 @@ export default function CustomerSite() {
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/journal" element={<JournalPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
             <Route path="/card" element={<BusinessCardPage />} />
             <Route path="/account" element={<MemberArea />} />
             <Route path="/admin" element={<AdminRedirect />} />

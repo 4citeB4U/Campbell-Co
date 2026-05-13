@@ -104,8 +104,8 @@ export default function Footer() {
                 { label: 'FAQ', path: '/faq' },
                 { label: 'About Us', path: '/about' },
                 { label: 'Returns & Exchanges', path: '/faq' },
-                { label: 'Order Tracking', path: '#' },
-                { label: 'Size Guide', path: '#' },
+                { label: 'Order Tracking', path: '/faq' },
+                { label: 'Size Guide', path: '/faq' },
               ].map((item) => (
                 <li key={item.label}>
                   <Link to={item.path} className="text-[10px] uppercase tracking-[0.25em] text-gray-text hover:text-gold transition-colors">{item.label}</Link>
@@ -134,8 +134,8 @@ export default function Footer() {
 
         <div className="py-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
           <div className="flex flex-wrap justify-center gap-8 text-[9px] uppercase tracking-[0.3em] font-bold text-gray-border">
-            <Link to="/about" className="hover:text-gold transition-colors">Privacy Policy</Link>
-            <Link to="/about" className="hover:text-gold transition-colors">Terms of Service</Link>
+            <Link to="/privacy" className="hover:text-gold transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-gold transition-colors">Terms of Service</Link>
             <a href={publicUrl('/admin.html')} className="text-gold hover:text-white transition-colors">Admin Portal</a>
             <span>{content.footer.copyright}</span>
           </div>

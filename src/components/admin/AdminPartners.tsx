@@ -88,7 +88,7 @@ export function AdminPartners() {
                           </div>
                           <div className="space-y-1">
                              <h4 className="text-[11px] font-black uppercase tracking-widest">{partner.name}</h4>
-                             <p className="text-[9px] uppercase tracking-widest text-white/40">{partner.type} • API v4.2</p>
+                             <p className="text-[9px] uppercase tracking-widest text-white/40">{partner.type} - API v4.2</p>
                           </div>
                        </div>
                        <div className="flex items-center gap-12">

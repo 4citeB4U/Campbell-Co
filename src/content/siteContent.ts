@@ -242,7 +242,7 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
     brandStatement: 'Diamonds. Crafted for a lifetime. An emerging luxury jewelry house with global sourcing connections and modern luxury culture.',
     newsletterTitle: 'Stay Connected',
     newsletterBody: 'Be the first to know about new arrivals, exclusive offers, and more.',
-    copyright: '© 2026 Campbell & Co.',
+    copyright: '(c) 2026 Campbell & Co.',
     badges: [
       { title: 'Free Insured Shipping', body: 'Worldwide, fully insured.' },
       { title: 'Lifetime Warranty', body: 'We stand behind every piece.' },
