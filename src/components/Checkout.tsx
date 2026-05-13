@@ -31,7 +31,11 @@ import {
   CheckCircle2, 
   Info,
   BadgeCheck,
-  MapPin
+  MapPin,
+  Bitcoin,
+  Wallet,
+  Landmark,
+  CircleDollarSign
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { publicAssetUrl } from '../lib/publicPath';
@@ -40,6 +44,37 @@ export default function Checkout() {
   const navigate = useNavigate();
   const { cartItems, subtotal, clearCart } = useCart();
   const [step, setStep] = useState<'details' | 'payment' | 'confirmation'>('details');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'installments' | 'deposit' | 'crypto'>('card');
+
+  const monthlyTwelve = subtotal > 0 ? Math.ceil((subtotal * 0.88) / 12) : 0;
+  const depositDue = subtotal > 0 ? Math.ceil(subtotal * 0.2) : 0;
+  const reserveMonthly = subtotal > 0 ? Math.ceil((subtotal - depositDue) / 6) : 0;
+  const paymentOptions = [
+    {
+      id: 'card' as const,
+      title: 'Card or Debit',
+      caption: 'Visa, Mastercard, Amex, debit, and wallet checkout.',
+      icon: CreditCard,
+    },
+    {
+      id: 'installments' as const,
+      title: 'Monthly Installments',
+      caption: `Estimated from $${monthlyTwelve.toLocaleString()} / month.`,
+      icon: Landmark,
+    },
+    {
+      id: 'deposit' as const,
+      title: 'Reserve with Deposit',
+      caption: `Reserve with $${depositDue.toLocaleString()} down.`,
+      icon: CircleDollarSign,
+    },
+    {
+      id: 'crypto' as const,
+      title: 'Bitcoin or Crypto',
+      caption: 'Verified digital-asset settlement flow.',
+      icon: Bitcoin,
+    },
+  ];
 
   if (step === 'confirmation') {
     return (
@@ -135,20 +170,124 @@ export default function Checkout() {
                  </>
                ) : (
                  <>
-                   <div className="md:col-span-2 space-y-3">
-                      <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">Financial Instrument Number</label>
-                      <div className="relative">
-                        <input type="text" className="w-full bg-transparent border-b border-gold/20 py-4 text-white outline-none focus:border-gold transition-colors text-[12px] uppercase tracking-widest px-2 pr-12" placeholder="**** **** **** 8888" />
-                        <CreditCard className="absolute right-0 top-1/2 -translate-y-1/2 text-gold/40" size={20} strokeWidth={1} />
+                   <div className="md:col-span-2 space-y-6">
+                      <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">Select Payment Route</label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {paymentOptions.map((option) => {
+                          const Icon = option.icon;
+                          const active = paymentMethod === option.id;
+                          return (
+                            <button
+                              key={option.id}
+                              type="button"
+                              onClick={() => setPaymentMethod(option.id)}
+                              className={`text-left border p-5 transition-all ${
+                                active ? 'border-gold bg-gold/8 text-white' : 'border-white/10 bg-white/[0.02] text-white/70 hover:border-gold/30'
+                              }`}
+                            >
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="space-y-2">
+                                  <div className="text-[10px] uppercase tracking-[0.35em] font-black">{option.title}</div>
+                                  <p className="text-[9px] uppercase tracking-[0.2em] leading-relaxed text-white/45">{option.caption}</p>
+                                </div>
+                                <Icon size={18} className={active ? 'text-gold' : 'text-white/35'} />
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                    </div>
-                   <div className="space-y-3">
-                      <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">Expiry</label>
-                      <input type="text" className="w-full bg-transparent border-b border-gold/20 py-4 text-white outline-none focus:border-gold transition-colors text-[12px] uppercase tracking-widest px-2" placeholder="12 / 28" />
+                   <div className="md:col-span-2 space-y-3">
+                      <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">
+                        {paymentMethod === 'card' && 'Financial Instrument Number'}
+                        {paymentMethod === 'installments' && 'Pre-Approval Contact Email'}
+                        {paymentMethod === 'deposit' && 'Reserve Contact Email'}
+                        {paymentMethod === 'crypto' && 'Digital Settlement Email'}
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          className="w-full bg-transparent border-b border-gold/20 py-4 text-white outline-none focus:border-gold transition-colors text-[12px] uppercase tracking-widest px-2 pr-12"
+                          placeholder={
+                            paymentMethod === 'card'
+                              ? '**** **** **** 8888'
+                              : paymentMethod === 'crypto'
+                                ? 'PRIVATECLIENT@DOMAIN.COM'
+                                : 'CLIENT@DOMAIN.COM'
+                          }
+                        />
+                        {paymentMethod === 'card' ? (
+                          <CreditCard className="absolute right-0 top-1/2 -translate-y-1/2 text-gold/40" size={20} strokeWidth={1} />
+                        ) : paymentMethod === 'crypto' ? (
+                          <Wallet className="absolute right-0 top-1/2 -translate-y-1/2 text-gold/40" size={20} strokeWidth={1} />
+                        ) : (
+                          <Landmark className="absolute right-0 top-1/2 -translate-y-1/2 text-gold/40" size={20} strokeWidth={1} />
+                        )}
+                      </div>
                    </div>
-                   <div className="space-y-3">
-                      <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">Vault Code (CVC)</label>
-                      <input type="text" className="w-full bg-transparent border-b border-gold/20 py-4 text-white outline-none focus:border-gold transition-colors text-[12px] uppercase tracking-widest px-2" placeholder="***" />
+                   {paymentMethod === 'card' ? (
+                     <>
+                       <div className="space-y-3">
+                          <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">Expiry</label>
+                          <input type="text" className="w-full bg-transparent border-b border-gold/20 py-4 text-white outline-none focus:border-gold transition-colors text-[12px] uppercase tracking-widest px-2" placeholder="12 / 28" />
+                       </div>
+                       <div className="space-y-3">
+                          <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">Vault Code (CVC)</label>
+                          <input type="text" className="w-full bg-transparent border-b border-gold/20 py-4 text-white outline-none focus:border-gold transition-colors text-[12px] uppercase tracking-widest px-2" placeholder="***" />
+                       </div>
+                     </>
+                   ) : (
+                     <>
+                       <div className="space-y-3">
+                          <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">
+                            {paymentMethod === 'crypto' ? 'Preferred Asset' : 'Preferred Schedule'}
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full bg-transparent border-b border-gold/20 py-4 text-white outline-none focus:border-gold transition-colors text-[12px] uppercase tracking-widest px-2"
+                            placeholder={
+                              paymentMethod === 'crypto'
+                                ? 'BITCOIN / USDC / ETH'
+                                : paymentMethod === 'installments'
+                                  ? `12 MONTHS - EST. $${monthlyTwelve.toLocaleString()} / MONTH`
+                                  : `20 PERCENT DOWN - EST. $${reserveMonthly.toLocaleString()} / MONTH`
+                            }
+                          />
+                       </div>
+                       <div className="space-y-3">
+                          <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">
+                            {paymentMethod === 'crypto' ? 'Wallet Confirmation' : 'Preferred Contact Number'}
+                          </label>
+                          <input
+                            type="text"
+                            className="w-full bg-transparent border-b border-gold/20 py-4 text-white outline-none focus:border-gold transition-colors text-[12px] uppercase tracking-widest px-2"
+                            placeholder={paymentMethod === 'crypto' ? 'SEND PAYMENT LINK OR INVOICE' : '(555) 555-0199'}
+                          />
+                       </div>
+                     </>
+                   )}
+                   <div className="md:col-span-2 border border-gold/10 bg-[#0a0a0a] p-6 space-y-3">
+                      <div className="text-[9px] uppercase tracking-[0.35em] text-gold font-black">Selected Payment Summary</div>
+                      {paymentMethod === 'card' && (
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-white/50 leading-relaxed">
+                          Pay in full at checkout using major credit cards, debit cards, and wallet-based checkout once the processor is connected.
+                        </p>
+                      )}
+                      {paymentMethod === 'installments' && (
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-white/50 leading-relaxed">
+                          Estimated monthly payment starts near ${monthlyTwelve.toLocaleString()} over 12 months, subject to lender approval and final processor terms.
+                        </p>
+                      )}
+                      {paymentMethod === 'deposit' && (
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-white/50 leading-relaxed">
+                          Reserve this piece with ${depositDue.toLocaleString()} down, then continue on an estimated six-month schedule near ${reserveMonthly.toLocaleString()} per month.
+                        </p>
+                      )}
+                      {paymentMethod === 'crypto' && (
+                        <p className="text-[9px] uppercase tracking-[0.2em] text-white/50 leading-relaxed">
+                          Bitcoin and selected digital assets can be accepted through a verified crypto settlement partner with confirmation before release.
+                        </p>
+                      )}
                    </div>
                    <div className="md:col-span-2 pt-10">
                       <div className="bg-gold/5 border border-gold/20 p-8 flex items-start gap-6">
@@ -165,7 +304,10 @@ export default function Checkout() {
                     onClick={() => setStep('confirmation')}
                     className="md:col-span-2 w-full py-10 bg-gold text-black-pure flex items-center justify-center gap-10 text-[12px] font-black uppercase tracking-[0.8em] hover:bg-white transition-all shadow-[0_20px_60px_rgba(212,175,55,0.4)]"
                    >
-                     Authorize Acquisition of ${subtotal.toLocaleString()}
+                     {paymentMethod === 'card' && `Authorize Acquisition of $${subtotal.toLocaleString()}`}
+                     {paymentMethod === 'installments' && 'Request Installment Approval'}
+                     {paymentMethod === 'deposit' && 'Reserve Piece with Deposit'}
+                     {paymentMethod === 'crypto' && 'Request Crypto Settlement Link'}
                    </button>
                    <button 
                     onClick={() => setStep('details')}
@@ -222,6 +364,30 @@ export default function Checkout() {
                  <div className="flex justify-between items-end">
                     <span className="text-[10px] uppercase tracking-[0.8em] text-gold font-black">Total Acquisition</span>
                     <span className="text-3xl font-serif text-white tracking-widest">${subtotal.toLocaleString()}</span>
+                 </div>
+              </div>
+
+              <div className="space-y-5 border border-gold/10 bg-gold/5 p-8">
+                 <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Flexible Payment Paths</span>
+                    <Link to="/payments" className="text-[8px] uppercase tracking-[0.3em] text-white/40 hover:text-gold transition-colors">
+                      View Options
+                    </Link>
+                 </div>
+                 <div className="space-y-3">
+                    <p className="text-[9px] uppercase tracking-[0.2em] text-white/50 leading-relaxed">
+                      Card and debit checkout can be enabled first, followed by monthly installments, private reserve deposits, and Bitcoin settlement for qualified orders.
+                    </p>
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className="flex items-center justify-between border border-white/10 px-4 py-3 text-[8px] uppercase tracking-[0.25em]">
+                        <span className="text-white/40">12-month estimate</span>
+                        <span className="text-gold font-black">From ${monthlyTwelve.toLocaleString()} / month</span>
+                      </div>
+                      <div className="flex items-center justify-between border border-white/10 px-4 py-3 text-[8px] uppercase tracking-[0.25em]">
+                        <span className="text-white/40">Reserve deposit</span>
+                        <span className="text-gold font-black">${depositDue.toLocaleString()} down</span>
+                      </div>
+                    </div>
                  </div>
               </div>
 

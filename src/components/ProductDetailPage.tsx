@@ -97,6 +97,9 @@ export default function ProductDetailPage() {
     setTimeout(() => setIsAdding(false), 1500);
   };
 
+  const monthlyTwelve = Math.ceil((product.price * 0.88) / 12);
+  const reserveDeposit = Math.ceil(product.price * 0.2);
+
   return (
     <div className="bg-black-pure pt-24 pb-32">
       {/* Breadcrumbs */}
@@ -177,6 +180,41 @@ export default function ProductDetailPage() {
                  <span className="flex items-center gap-2"><ShieldCheck size={10} className="text-gold" /> Global Insurance</span>
                  <span className="flex items-center gap-2"><Truck size={10} className="text-gold" /> Express Delivery</span>
               </div>
+           </div>
+
+           <div className="border border-gold/10 bg-gold/5 p-6 space-y-5">
+              <div className="flex items-center justify-between gap-4">
+                 <div>
+                    <p className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Payment Options</p>
+                    <p className="text-[9px] uppercase tracking-[0.2em] text-white/45 mt-2">
+                      Pay in full, split monthly, reserve with a deposit, or request crypto settlement.
+                    </p>
+                 </div>
+                 <Link to="/payments" className="text-[8px] uppercase tracking-[0.3em] text-white/40 hover:text-gold transition-colors">
+                    View Details
+                 </Link>
+              </div>
+              <div className="grid grid-cols-1 gap-3">
+                 <div className="flex items-center justify-between border border-white/10 px-4 py-4">
+                    <span className="text-[8px] uppercase tracking-[0.25em] text-white/40 font-black">Card or debit</span>
+                    <span className="text-[9px] uppercase tracking-[0.25em] text-white font-black">Pay in full</span>
+                 </div>
+                 <div className="flex items-center justify-between border border-white/10 px-4 py-4">
+                    <span className="text-[8px] uppercase tracking-[0.25em] text-white/40 font-black">Monthly installments</span>
+                    <span className="text-[9px] uppercase tracking-[0.25em] text-gold font-black">From ${monthlyTwelve.toLocaleString()} / month</span>
+                 </div>
+                 <div className="flex items-center justify-between border border-white/10 px-4 py-4">
+                    <span className="text-[8px] uppercase tracking-[0.25em] text-white/40 font-black">Reserve deposit</span>
+                    <span className="text-[9px] uppercase tracking-[0.25em] text-gold font-black">${reserveDeposit.toLocaleString()} down</span>
+                 </div>
+                 <div className="flex items-center justify-between border border-white/10 px-4 py-4">
+                    <span className="text-[8px] uppercase tracking-[0.25em] text-white/40 font-black">Bitcoin or crypto</span>
+                    <span className="text-[9px] uppercase tracking-[0.25em] text-white font-black">Private settlement available</span>
+                 </div>
+              </div>
+              <p className="text-[8px] uppercase tracking-[0.2em] leading-relaxed text-white/45">
+                 Example schedules are shown for presentation only until your processor, lender, and crypto partner are connected to the live checkout flow.
+              </p>
            </div>
 
            {/* The Narrative — Story (Moved Higher) */}

@@ -134,6 +134,113 @@ const JournalPage = () => {
   );
 };
 
+const PaymentOptionsPage = () => {
+  const examplePrice = 4200;
+  const deposit = Math.ceil(examplePrice * 0.2);
+  const sixMonth = Math.ceil((examplePrice - deposit) / 6);
+  const twelveMonth = Math.ceil((examplePrice * 0.88) / 12);
+
+  const pathways = [
+    {
+      eyebrow: 'Pay In Full',
+      title: 'Cards, Debit, and Wallet Checkout',
+      body: 'Campbell & Co. can be prepared to accept major credit cards, debit cards, and wallet-based checkout for immediate authorization and secure capture.',
+      bullets: ['Visa, Mastercard, Amex, and debit cards', 'Wallet-ready checkout such as Apple Pay and Google Pay', 'Fastest activation path for standard online payments'],
+    },
+    {
+      eyebrow: 'Pay Over Time',
+      title: 'Installments and Monthly Financing',
+      body: 'For clients who want flexibility, the storefront can present monthly installment options at checkout and approval-based financing for higher-ticket pieces.',
+      bullets: [`Estimated 12-month example: from $${twelveMonth.toLocaleString()} per month on a $${examplePrice.toLocaleString()} piece`, `Reserve-style plan example: $${deposit.toLocaleString()} down, then about $${sixMonth.toLocaleString()} per month for six months`, 'Clear disclosure language can live next to the product price and inside checkout'],
+    },
+    {
+      eyebrow: 'Digital Assets',
+      title: 'Bitcoin and Crypto Settlement',
+      body: 'The storefront can also offer Bitcoin and selected digital asset settlement through a dedicated crypto payment partner for clients who prefer alternative payment rails.',
+      bullets: ['Bitcoin-first presentation with room for additional approved assets', 'Manual or hosted payment link flow for private orders', 'Confirmation review before release or fulfillment'],
+    },
+  ];
+
+  return (
+    <section className="pt-40 pb-24 px-6 lg:px-20 text-white">
+      <div className="max-w-7xl mx-auto space-y-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.9fr] gap-10 items-start">
+          <div className="space-y-6">
+            <span className="text-[10px] uppercase tracking-[0.7em] text-gold font-black">Payments</span>
+            <h1 className="text-5xl lg:text-7xl font-serif uppercase tracking-widest leading-tight">Flexible Ways To Acquire</h1>
+            <p className="text-white/50 text-sm uppercase tracking-[0.25em] leading-loose max-w-4xl">
+              Campbell & Co. can present a premium payment experience that supports immediate card checkout, monthly installment options, reserve deposits, and Bitcoin-style settlement without making the customer guess how the process works.
+            </p>
+          </div>
+          <div className="border border-gold/10 bg-gold/5 p-8 space-y-6">
+            <p className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Example Client View</p>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border border-white/10 px-4 py-4">
+                <span className="text-[8px] uppercase tracking-[0.25em] text-white/40">Pay in full</span>
+                <span className="text-[10px] uppercase tracking-[0.25em] font-black text-white">${examplePrice.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center justify-between border border-white/10 px-4 py-4">
+                <span className="text-[8px] uppercase tracking-[0.25em] text-white/40">12-month estimate</span>
+                <span className="text-[10px] uppercase tracking-[0.25em] font-black text-gold">From ${twelveMonth.toLocaleString()} / month</span>
+              </div>
+              <div className="flex items-center justify-between border border-white/10 px-4 py-4">
+                <span className="text-[8px] uppercase tracking-[0.25em] text-white/40">Reserve deposit</span>
+                <span className="text-[10px] uppercase tracking-[0.25em] font-black text-gold">${deposit.toLocaleString()} down</span>
+              </div>
+              <div className="flex items-center justify-between border border-white/10 px-4 py-4">
+                <span className="text-[8px] uppercase tracking-[0.25em] text-white/40">Crypto settlement</span>
+                <span className="text-[10px] uppercase tracking-[0.25em] font-black text-white">Available by request</span>
+              </div>
+            </div>
+            <Link to="/checkout" className="block w-full py-4 border border-gold text-gold text-center text-[10px] uppercase tracking-[0.4em] font-black hover:bg-gold hover:text-black-pure transition-all">
+              Review Checkout Experience
+            </Link>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {pathways.map((pathway) => (
+            <article key={pathway.title} className="border border-white/10 bg-[#050505] p-8 space-y-6">
+              <span className="text-[9px] uppercase tracking-[0.5em] text-gold font-black">{pathway.eyebrow}</span>
+              <h2 className="text-2xl font-serif uppercase tracking-[0.15em]">{pathway.title}</h2>
+              <p className="text-white/50 text-sm uppercase tracking-[0.2em] leading-loose">{pathway.body}</p>
+              <div className="space-y-3">
+                {pathway.bullets.map((bullet) => (
+                  <div key={bullet} className="border border-white/10 px-4 py-4 text-[9px] uppercase tracking-[0.2em] text-white/55">
+                    {bullet}
+                  </div>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="border border-gold/10 bg-[#050505] p-8 lg:p-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div className="space-y-4">
+            <p className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Recommended Rollout</p>
+            <h2 className="text-3xl lg:text-4xl font-serif uppercase tracking-[0.15em]">Launch in layers, not all at once.</h2>
+            <p className="text-white/50 text-sm uppercase tracking-[0.2em] leading-loose">
+              The cleanest rollout is usually cards and debit first, monthly installments second, reserve deposit flows third, and Bitcoin or crypto settlement after the core checkout is proven.
+            </p>
+          </div>
+          <div className="space-y-3">
+            {[
+              'Phase 1: cards, debit, and wallet checkout',
+              'Phase 2: installment messaging on product pages and in checkout',
+              'Phase 3: private reserve deposit plans for higher-ticket orders',
+              'Phase 4: Bitcoin and selected crypto by hosted payment link or direct settlement partner',
+            ].map((item) => (
+              <div key={item} className="border border-white/10 px-4 py-4 text-[9px] uppercase tracking-[0.2em] text-white/55">
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const LegalPage = ({
   eyebrow,
   title,
@@ -273,6 +380,7 @@ export default function CustomerSite() {
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/journal" element={<JournalPage />} />
+            <Route path="/payments" element={<PaymentOptionsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/card" element={<BusinessCardPage />} />

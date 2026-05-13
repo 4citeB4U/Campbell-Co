@@ -103,6 +103,7 @@ export default function Footer() {
                 { label: 'Contact Us', path: '/contact' },
                 { label: 'FAQ', path: '/faq' },
                 { label: 'About Us', path: '/about' },
+                { label: 'Payment Options', path: '/payments' },
                 { label: 'Returns & Exchanges', path: '/faq' },
                 { label: 'Order Tracking', path: '/faq' },
                 { label: 'Size Guide', path: '/faq' },
