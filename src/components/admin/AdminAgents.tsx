@@ -12,7 +12,8 @@ import {
   MessageSquare,
   Package,
   Settings,
-  AlertTriangle
+  AlertTriangle,
+  Users
 } from 'lucide-react';
 import { AIAgent } from '../../types';
 

@@ -19,6 +19,11 @@ CHAIN: Standards → Integrated → Runtime → Projections
 LICENSE: PROPRIETARY
 */
 export type Category = 'Rings' | 'Chains' | 'Pendants' | 'Bracelets' | 'Stud Earrings' | 'Loose Diamonds';
+export interface CategoryInfo {
+  id: string;
+  title: string;
+  image: string;
+}
 export type Gender = 'men' | 'women' | 'unisex';
 export type MetalType = '14K Yellow Gold' | '14K White Gold' | '14K Rose Gold' | '18K Yellow Gold' | '18K White Gold' | 'Platinum' | 'Sterling Silver' | 'Black Titanium' | 'Titanium' | '10K Yellow Gold' | '10K White Gold' | 'None';
 export type DiamondType = 'Lab' | 'Natural' | 'Certified' | 'None';

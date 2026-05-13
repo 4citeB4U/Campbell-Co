@@ -9,7 +9,8 @@ import {
   History, 
   Heart,
   Award,
-  ChevronRight
+  ChevronRight,
+  Image as ImageIcon
 } from 'lucide-react';
 import { useAdminStore } from '../hooks/useAdminStore'; // Assuming we can use parts of this for members too or create a useMember hook
 
