@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Brain, 
   CheckCircle2, 
@@ -13,7 +13,11 @@ import {
   Package,
   Settings,
   AlertTriangle,
-  Users
+  Users,
+  Eye,
+  Command,
+  Terminal,
+  Cpu
 } from 'lucide-react';
 import { AIAgent } from '../../types';
 
@@ -23,103 +27,213 @@ interface AgentsProps {
 }
 
 export function AdminAgents({ agents, onApprove }: AgentsProps) {
+  const [selectedAgent, setSelectedAgent] = useState<AIAgent | null>(agents[0] || null);
+  const [logs, setLogs] = useState<Record<string, string[]>>({});
+
+  // Simulate live agent logs
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLogs(prev => {
+        const newLogs = { ...prev };
+        agents.forEach(agent => {
+          if (!newLogs[agent.id]) newLogs[agent.id] = [];
+          const randomTasks = [
+            `Analyzing ${agent.id === 'site-manager' ? 'live visitor behavior' : 'inventory margins'}...`,
+            `Updating ${agent.id === 'sales-agent' ? 'dynamic pricing model' : 'supply chain cache'}...`,
+            `Executing routine ${agent.id === 'security-agent' ? 'firewall audit' : 'database optimization'}...`,
+            `Monitoring ${agent.id === 'customer-care-agent' ? 'inbound sentiment' : 'global gold prices'}...`
+          ];
+          const newLog = `[${new Date().toLocaleTimeString()}] ${randomTasks[Math.floor(Math.random() * randomTasks.length)]}`;
+          newLogs[agent.id] = [newLog, ...newLogs[agent.id]].slice(0, 50);
+        });
+        return newLogs;
+      });
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [agents]);
+
+  const activeAgent = selectedAgent || agents[0];
+
   return (
-    <div className="space-y-10 pb-20">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-        <div className="space-y-4">
-          <span className="text-[10px] uppercase tracking-[0.8em] text-gold font-black">Autonomous Operations</span>
-          <h2 className="text-4xl font-serif tracking-widest uppercase">AI Workforce</h2>
-        </div>
-        <div className="flex gap-4">
-           <div className="flex items-center gap-2 px-6 py-3 bg-green-500/10 border border-green-500/20 rounded-full">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className="text-[9px] uppercase tracking-widest text-green-500 font-black">All Agents Online</span>
-           </div>
-        </div>
+    <div className="flex flex-col h-[calc(100vh-140px)] gap-6">
+      
+      <div className="flex items-center justify-between shrink-0">
+         <div className="space-y-2">
+            <span className="text-[10px] uppercase tracking-[0.8em] text-gold font-black">Sovereign Workforce</span>
+            <h2 className="text-4xl font-serif tracking-widest uppercase">Agent Intelligence</h2>
+         </div>
+         <div className="flex items-center gap-4 px-6 py-3 bg-gold/5 border border-gold/10 rounded-full">
+            <div className="w-2 h-2 bg-gold rounded-full animate-pulse" />
+            <span className="text-[9px] uppercase tracking-widest text-gold font-black">Neural Net Connected</span>
+         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-10">
-        {agents.map((agent) => (
-          <motion.div 
-            key={agent.id}
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#111] border border-white/5 p-8 space-y-8 relative overflow-hidden"
-          >
-            {/* Status indicator */}
-            <div className={`absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 rotate-45 ${
-               agent.status === 'alert' ? 'bg-red-500/10' : 'bg-gold/10'
-            }`} />
+      <div className="flex-1 flex gap-6 min-h-0">
+         
+         {/* Agent Selector Sidebar */}
+         <aside className="w-80 bg-[#111] border border-white/5 rounded-sm overflow-hidden flex flex-col shrink-0">
+            <div className="p-6 border-b border-white/5 bg-[#050505]">
+               <span className="text-[9px] uppercase tracking-widest text-white/30 font-black">Active Identities</span>
+            </div>
+            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-2">
+               {agents.map((agent) => (
+                 <button
+                   key={agent.id}
+                   onClick={() => setSelectedAgent(agent)}
+                   className={`w-full flex items-center gap-4 p-4 rounded-sm transition-all group ${
+                     activeAgent.id === agent.id ? 'bg-gold' : 'hover:bg-white/5 border border-white/5'
+                   }`}
+                 >
+                    <div className={`w-10 h-10 flex items-center justify-center shrink-0 ${
+                       activeAgent.id === agent.id ? 'bg-black-pure text-gold' : 'bg-white/5 text-white/40 group-hover:text-gold'
+                    }`}>
+                       {getAgentIcon(agent.id, 18)}
+                    </div>
+                    <div className="text-left overflow-hidden">
+                       <p className={`text-[11px] font-black uppercase tracking-widest truncate ${
+                          activeAgent.id === agent.id ? 'text-black-pure' : 'text-white'
+                       }`}>{agent.name}</p>
+                       <p className={`text-[8px] uppercase tracking-widest truncate ${
+                          activeAgent.id === agent.id ? 'text-black-pure/60' : 'text-white/40'
+                       }`}>{agent.status}</p>
+                    </div>
+                 </button>
+               ))}
+            </div>
+         </aside>
 
-            <div className="flex items-start justify-between relative z-10">
-               <div className="flex gap-6">
-                  <div className={`w-16 h-16 border flex items-center justify-center ${
-                     agent.status === 'alert' ? 'border-red-500/50 bg-red-500/10' : 'border-gold/50 bg-gold/10'
-                  }`}>
-                     {getAgentIcon(agent.id)}
-                  </div>
-                  <div>
-                     <h3 className="text-xl font-serif tracking-widest uppercase text-white">{agent.name}</h3>
-                     <p className="text-[10px] uppercase tracking-widest text-white/40 mt-1">{agent.purpose}</p>
-                  </div>
-               </div>
-               <span className={`px-4 py-1.5 rounded-full border text-[8px] font-black uppercase tracking-widest ${
-                  agent.status === 'active' ? 'bg-green-500/10 text-green-500 border-green-500/20' :
-                  agent.status === 'alert' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
-                  'bg-white/5 text-white/40 border-white/10'
-               }`}>
-                  {agent.status}
-               </span>
+         {/* Agent Command Interface */}
+         <main className="flex-1 flex flex-col gap-6 min-w-0">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 shrink-0">
+               <AgentStatCard label="Task Efficiency" value="99.4%" icon={Zap} />
+               <AgentStatCard label="Uptime" value="100%" icon={Activity} />
+               <AgentStatCard label="Decisions" value="12,402" icon={Cpu} />
             </div>
 
-            <div className="space-y-6 relative z-10">
-               <h4 className="text-[10px] uppercase tracking-[0.4em] font-black text-white/30 border-b border-white/5 pb-3">Recommendations</h4>
-               <div className="space-y-4">
-                  {agent.recommendations.map((rec) => (
-                    <div key={rec.id} className="bg-black-pure border border-white/5 p-5 flex items-start gap-5 group">
-                       <div className="mt-1">
-                          <Activity size={14} className="text-gold" />
-                       </div>
-                       <div className="flex-1">
-                          <p className="text-[10px] uppercase tracking-widest leading-relaxed text-white/80">{rec.text}</p>
-                          <div className="mt-4 flex gap-4">
+            <div className="flex-1 flex gap-6 min-h-0">
+               
+               {/* Terminal & Recommendations */}
+               <div className="flex-1 flex flex-col gap-6">
+                  <section className="flex-1 bg-[#050505] border border-white/5 rounded-sm flex flex-col overflow-hidden">
+                     <div className="p-4 border-b border-white/5 bg-[#111] flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                           <Terminal size={14} className="text-gold" />
+                           <span className="text-[9px] uppercase tracking-widest font-black text-white/40">Neural Log: {activeAgent.name}</span>
+                        </div>
+                        <div className="flex gap-1">
+                           <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                        </div>
+                     </div>
+                     <div className="flex-1 p-6 font-mono text-[10px] text-gold/60 space-y-2 overflow-y-auto custom-scrollbar selection:bg-gold selection:text-black-pure">
+                        {logs[activeAgent.id]?.map((log, i) => (
+                          <div key={i} className="opacity-0 animate-fade-in">{log}</div>
+                        ))}
+                        <div className="flex gap-2 items-center text-white/20">
+                           <span className="animate-pulse">_</span>
+                           <span className="italic">Listening for commands...</span>
+                        </div>
+                     </div>
+                  </section>
+
+                  <section className="h-64 bg-[#111] border border-white/5 rounded-sm p-6 space-y-6 overflow-y-auto custom-scrollbar">
+                     <h3 className="text-[10px] uppercase tracking-[0.4em] font-black text-white/40 border-b border-white/5 pb-3">Operational Directives</h3>
+                     <div className="space-y-4">
+                        {activeAgent.recommendations.map((rec) => (
+                          <div key={rec.id} className="bg-black-pure border border-white/5 p-5 flex items-center justify-between group hover:border-gold/30 transition-all">
+                             <div className="flex items-center gap-4">
+                                <div className="w-2 h-2 bg-gold rounded-full" />
+                                <p className="text-[10px] uppercase tracking-widest text-white/80">{rec.text}</p>
+                             </div>
                              <button 
-                                onClick={() => onApprove(agent.id, rec.id)}
-                                className="px-5 py-2 bg-gold text-black-pure text-[9px] font-black uppercase tracking-widest hover:bg-white transition-all"
+                                onClick={() => onApprove(activeAgent.id, rec.id)}
+                                className="px-6 py-2 bg-gold text-black-pure text-[9px] font-black uppercase tracking-widest hover:bg-white transition-all shrink-0"
                              >
-                                {rec.actionLabel}
-                             </button>
-                             <button className="px-5 py-2 border border-white/10 text-[9px] uppercase tracking-widest font-black hover:bg-white/5">
-                                Ignore
+                                Execute
                              </button>
                           </div>
-                       </div>
-                    </div>
-                  ))}
-                  {agent.recommendations.length === 0 && (
-                    <p className="text-[10px] uppercase tracking-widest text-white/20 italic">No pending recommendations</p>
-                  )}
+                        ))}
+                        {activeAgent.recommendations.length === 0 && (
+                          <div className="py-8 text-center text-[10px] uppercase tracking-widest text-white/20 italic">No pending directives for this agent</div>
+                        )}
+                     </div>
+                  </section>
                </div>
-            </div>
 
-            <div className="pt-4 flex justify-between items-center text-[9px] uppercase tracking-widest font-black text-white/20 relative z-10">
-               <div className="flex gap-4">
-                  <span>Efficiency: 98%</span>
-                  <span>Tasks: 1,420</span>
-               </div>
-               <button className="flex items-center gap-2 hover:text-gold transition-colors">
-                  <Settings size={12} /> Configure Agent
-               </button>
+               {/* Agent Profile Panel */}
+               <aside className="w-80 bg-[#111] border border-white/5 rounded-sm p-8 space-y-10 shrink-0">
+                  <div className="text-center space-y-6">
+                     <div className="w-32 h-32 mx-auto border border-gold/20 p-2 rotate-45 group">
+                        <div className="w-full h-full bg-gold/5 flex items-center justify-center -rotate-45">
+                           {getAgentIcon(activeAgent.id, 40)}
+                        </div>
+                     </div>
+                     <div className="space-y-2">
+                        <h3 className="text-xl font-serif tracking-widest uppercase">{activeAgent.name}</h3>
+                        <div className="px-4 py-1 bg-white/5 border border-white/10 rounded-full inline-block">
+                           <span className="text-[8px] uppercase tracking-[0.3em] text-white/40">Tier 4 Sovereign Agent</span>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="space-y-6">
+                     <h4 className="text-[9px] uppercase tracking-[0.4em] font-black text-gold/60 border-b border-white/5 pb-2">Personality Profile</h4>
+                     <p className="text-[10px] uppercase tracking-widest leading-loose text-white/40">
+                        {getAgentBio(activeAgent.id)}
+                     </p>
+                  </div>
+
+                  <div className="space-y-6">
+                     <h4 className="text-[9px] uppercase tracking-[0.4em] font-black text-gold/60 border-b border-white/5 pb-2">Authority Level</h4>
+                     <div className="space-y-4">
+                        <AuthorityItem label="Database Access" level="Unlimited" />
+                        <AuthorityItem label="Financial Control" level="Restricted" />
+                        <AuthorityItem label="User Data" level="Encrypted" />
+                     </div>
+                  </div>
+               </aside>
             </div>
-          </motion.div>
-        ))}
+         </main>
       </div>
     </div>
   );
 }
 
-function getAgentIcon(id: string) {
-  const size = 24;
+function AgentStatCard({ label, value, icon: Icon }: { label: string, value: string, icon: any }) {
+  return (
+    <div className="bg-[#111] border border-white/5 p-6 flex items-center justify-between group hover:border-gold/30 transition-all">
+       <div className="space-y-1">
+          <p className="text-[9px] uppercase tracking-widest text-white/30 font-black">{label}</p>
+          <p className="text-2xl font-serif text-white tracking-widest">{value}</p>
+       </div>
+       <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-white/20 group-hover:text-gold group-hover:bg-gold/10 transition-all">
+          <Icon size={20} />
+       </div>
+    </div>
+  );
+}
+
+function AuthorityItem({ label, level }: { label: string, level: string }) {
+  return (
+    <div className="flex justify-between items-center">
+       <span className="text-[9px] uppercase tracking-widest text-white/40">{label}</span>
+       <span className="text-[9px] uppercase tracking-widest font-black text-white">{level}</span>
+    </div>
+  );
+}
+
+function getAgentBio(id: string) {
+  const bios: Record<string, string> = {
+    'site-manager': 'Meticulous and analytical. Focuses on conversion rate optimization and site performance metrics. Prefers data-driven design shifts.',
+    'sales-agent': 'Aggressive yet elegant. Analyzes market trends to maximize profit margins while maintaining luxury brand positioning.',
+    'customer-care-agent': 'Sophisticated and empathetic. Trained in high-net-worth individual communication patterns to ensure white-glove service.',
+    'inventory-agent': 'Precise and predictive. Monitors stock levels and material scarcity to prevent supply chain disruptions.',
+    'procurement-agent': 'Strategic and connected. Navigates global diamond markets to secure the highest quality artifacts at competitive costs.',
+  };
+  return bios[id] || 'Autonomous LeeWay agent governed by the Sovereign Standards enforcement engine. Dedicated to operational excellence.';
+}
+
+function getAgentIcon(id: string, size = 24) {
   const colorClass = "text-gold";
   switch (id) {
     case 'site-manager': return <Activity size={size} className={colorClass} />;

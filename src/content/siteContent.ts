@@ -132,6 +132,10 @@ export type SiteContent = {
       posts: Array<{ title: string; excerpt: string; path: string }>;
     };
   };
+  theme: {
+    primaryColor: string;
+    headingFont: string;
+  };
 };
 
 export const SITE_CONTENT_STORAGE_KEY = 'campbell-site-content';
@@ -282,6 +286,10 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
         { title: 'The Case for Lab Diamonds', excerpt: 'Where value, brilliance, and sourcing priorities meet.', path: '/diamonds/lab' },
       ],
     },
+  },
+  theme: {
+    primaryColor: '#D6B46A',
+    headingFont: 'Playfair Display',
   },
 };
 

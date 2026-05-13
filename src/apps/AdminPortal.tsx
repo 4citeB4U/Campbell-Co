@@ -65,6 +65,9 @@ import { AdminMembers } from '../components/admin/AdminMembers';
 import { AdminAgents } from '../components/admin/AdminAgents';
 import { AdminProcurement } from '../components/admin/AdminProcurement';
 import { AdminMedia } from '../components/admin/AdminMedia';
+import { AdminCMS } from '../components/admin/AdminCMS';
+import { AdminPartners } from '../components/admin/AdminPartners';
+import { AdminSettings } from '../components/admin/AdminSettings';
 
 // Types for Admin View
 type AdminSection = 
@@ -158,13 +161,22 @@ export default function AdminPortal() {
       
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex w-72 bg-[#050505] border-r border-white/5 flex-col shrink-0">
-         <div className="p-8 border-b border-white/5 flex items-center gap-4">
-            <div className="w-8 h-8 border border-gold flex items-center justify-center shrink-0">
-               <span className="text-gold font-serif text-sm">C</span>
+         <div className="p-8 border-b border-white/5 flex items-center gap-5">
+            <div className="relative group">
+               <div className="w-10 h-10 border border-gold/40 flex items-center justify-center rotate-45 group-hover:rotate-0 transition-all duration-700">
+                  <span className="text-gold font-serif text-lg -rotate-45 group-hover:rotate-0 transition-all duration-700">C</span>
+               </div>
+               <div className="absolute inset-0 border border-gold/10 scale-125 opacity-0 group-hover:opacity-100 transition-all duration-700" />
             </div>
             <div className="flex flex-col">
-               <span className="text-[10px] uppercase tracking-[0.4em] font-black text-gold">Campbell-Co</span>
-               <span className="text-[10px] uppercase tracking-[0.2em] font-black opacity-40">Operating System</span>
+               <div className="flex items-center gap-2">
+                  <span className="text-[11px] uppercase tracking-[0.5em] font-black text-white">CAMPBELL</span>
+                  <span className="text-gold font-serif italic text-sm">&</span>
+               </div>
+               <div className="flex items-center justify-between">
+                  <span className="text-[11px] uppercase tracking-[0.5em] font-black text-white">CO</span>
+                  <span className="text-[8px] uppercase tracking-widest font-black text-gold/40">OS</span>
+               </div>
             </div>
          </div>
 
@@ -242,9 +254,9 @@ export default function AdminPortal() {
                  {activeSection === 'members' && <AdminMembers members={members} />}
                  {activeSection === 'agents' && <AdminAgents agents={agents} onApprove={actions.approveAgentTask} />}
                  {activeSection === 'procurement' && <AdminProcurement data={procurement} />}
-                 {activeSection === 'site-control' && <AdminHomepageManager />}
+                 {activeSection === 'site-control' && <AdminCMS />}
                  {activeSection === 'media' && <AdminMedia />}
-                 {activeSection === 'vendors' && <AdminPlaceholder section="Marketplace" icon={Target} description="Partner onboarding, commission tracking, and inventory management." />}
+                 {activeSection === 'vendors' && <AdminPartners />}
                  {activeSection === 'analytics' && <AdminPlaceholder section="Intelligence" icon={BarChart3} description="First-party behavior tracking and conversion funnels." />}
                  {activeSection === 'privacy' && <AdminPlaceholder section="Privacy & Consent" icon={ShieldCheck} description="GDPR/CCPA compliance, cookie records, and data requests." />}
                  {activeSection === 'settings' && <AdminSettings />}
@@ -481,88 +493,6 @@ function AdminProductList() {
            onSave={handleSave} 
          />
        )}
-    </div>
-  );
-}
-
-function AdminHomepageManager() {
-  const { content } = useSiteContent();
-  const [draft, setDraft] = useState<SiteContent>(content);
-  const [activePanel, setActivePanel] = useState<'homepage' | 'trust' | 'pages' | 'footer'>('homepage');
-  const [saving, setSaving] = useState(false);
-  const [status, setStatus] = useState('');
-
-  useEffect(() => {
-    setDraft(content);
-  }, [content]);
-
-  const updateDraft = (updater: (current: SiteContent) => SiteContent) => {
-    setDraft((current) => updater(structuredClone(current)));
-    setStatus('Unsaved changes');
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      await saveSiteContent(draft);
-      setStatus(isFirebaseConfigured ? 'Published to live site' : 'Saved locally');
-    } catch (error) {
-      console.error(error);
-      setStatus('Publish failed.');
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  return (
-    <div className="space-y-10">
-      <div className="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-8">
-        <div className="space-y-4">
-          <span className="text-[10px] uppercase tracking-[0.8em] text-gold font-black">CMS</span>
-          <h2 className="text-4xl font-serif tracking-widest uppercase">Site Control</h2>
-        </div>
-        <button disabled={saving} onClick={handleSave} className="px-8 py-4 bg-gold text-black-pure text-[10px] font-black uppercase tracking-[0.4em] hover:bg-white transition-all flex items-center gap-4">
-          <Save size={16} /> {saving ? 'Publishing...' : 'Save & Publish'}
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 2xl:grid-cols-[1fr_400px] gap-10">
-        <div className="bg-[#111] border border-white/5">
-          <div className="flex flex-wrap gap-2 p-4 border-b border-white/5 bg-[#050505]">
-            {['homepage', 'trust', 'pages', 'footer'].map((id) => (
-              <button
-                key={id}
-                onClick={() => setActivePanel(id as any)}
-                className={`px-6 py-4 text-[9px] uppercase tracking-[0.3em] font-black transition-all ${activePanel === id ? 'bg-gold text-black-pure' : 'text-white/40 hover:bg-white/5'}`}
-              >
-                {id}
-              </button>
-            ))}
-          </div>
-          <div className="p-10 text-white/20 uppercase tracking-widest text-[10px]">Select a section to begin editorial control...</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function AdminSettings() {
-  return (
-    <div className="max-w-2xl space-y-12">
-       <div className="space-y-4">
-          <span className="text-[10px] uppercase tracking-[0.8em] text-gold font-black">Security</span>
-          <h2 className="text-4xl font-serif tracking-widest uppercase">Vault Settings</h2>
-       </div>
-       <div className="p-8 bg-[#111] border border-white/5 space-y-6">
-          <div className="flex items-center justify-between">
-             <span className="text-[10px] uppercase tracking-widest text-white/40 font-black">Admin Access Role</span>
-             <span className="text-[10px] uppercase tracking-widest text-gold font-black">Owner</span>
-          </div>
-          <div className="flex items-center justify-between">
-             <span className="text-[10px] uppercase tracking-widest text-white/40 font-black">Encryption Status</span>
-             <span className="text-[10px] uppercase tracking-widest text-green-500 font-black">AES-256 Active</span>
-          </div>
-       </div>
     </div>
   );
 }

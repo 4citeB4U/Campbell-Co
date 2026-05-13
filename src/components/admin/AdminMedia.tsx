@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Video, 
   Image as ImageIcon, 
@@ -10,19 +10,41 @@ import {
   MoreVertical,
   Play,
   Trash2,
-  CheckCircle
+  CheckCircle,
+  FileText
 } from 'lucide-react';
 import { publicAssetUrl } from '../../lib/publicPath';
 
 export function AdminMedia() {
   const [activeTab, setActiveTab] = useState<'all' | 'video' | 'images' | 'audio'>('all');
-
-  const mediaItems = [
+  const [items, setItems] = useState([
     { id: '1', type: 'video', title: 'Summer Collection Hero', size: '12.4 MB', date: '2 hours ago', thumbnail: '' },
     { id: '2', type: 'image', title: 'Noir Cuban Bracelet - Front', size: '2.1 MB', date: '5 hours ago', thumbnail: '/assets/products/bracelet-1.png' },
     { id: '3', type: 'video', title: 'Craftsmanship Lookbook', size: '45.8 MB', date: '1 day ago', thumbnail: '' },
     { id: '4', type: 'audio', title: 'Luxury Ambient - Store Loop', size: '3.2 MB', date: '2 days ago', thumbnail: '' },
-  ];
+  ]);
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = () => {
+    setUploading(true);
+    // Simulate luxury asset upload
+    setTimeout(() => {
+      const newItem = {
+        id: Date.now().toString(),
+        type: Math.random() > 0.5 ? 'video' : 'image',
+        title: `Asset_${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
+        size: `${(Math.random() * 20).toFixed(1)} MB`,
+        date: 'Just now',
+        thumbnail: ''
+      };
+      setItems([newItem, ...items]);
+      setUploading(false);
+    }, 2500);
+  };
+
+  const removeItem = (id: string) => {
+    setItems(items.filter(item => item.id !== id));
+  };
 
   return (
     <div className="space-y-10 pb-20">
@@ -31,8 +53,19 @@ export function AdminMedia() {
           <span className="text-[10px] uppercase tracking-[0.8em] text-gold font-black">Content Engine</span>
           <h2 className="text-4xl font-serif tracking-widest uppercase">Media Studio</h2>
         </div>
-        <button className="px-8 py-4 bg-gold text-black-pure text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-4 hover:bg-white transition-all">
-          <Upload size={16} /> Upload New Asset
+        <button 
+          onClick={handleUpload}
+          disabled={uploading}
+          className={`px-8 py-4 bg-gold text-black-pure text-[10px] font-black uppercase tracking-[0.4em] flex items-center gap-4 hover:bg-white transition-all ${
+            uploading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          {uploading ? (
+            <div className="w-4 h-4 border-2 border-black-pure border-t-transparent animate-spin rounded-full" />
+          ) : (
+            <Upload size={16} />
+          )}
+          {uploading ? 'Encoding Asset...' : 'Upload New Asset'}
         </button>
       </div>
 
@@ -56,48 +89,60 @@ export function AdminMedia() {
               <input 
                 type="text" 
                 placeholder="SEARCH MEDIA..." 
-                className="bg-black-pure border border-white/5 pl-10 pr-4 py-2 text-[9px] uppercase tracking-widest focus:border-gold outline-none"
+                className="bg-black-pure border border-white/5 pl-10 pr-4 py-2 text-[9px] uppercase tracking-widest focus:border-gold outline-none text-white"
               />
            </div>
         </div>
 
-        <div className="p-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-           {mediaItems.filter(i => activeTab === 'all' || i.type === activeTab.slice(0, -1)).map((item) => (
-             <motion.div 
-               key={item.id}
-               initial={{ opacity: 0, scale: 0.9 }}
-               animate={{ opacity: 1, scale: 1 }}
-               className="group space-y-4"
-             >
-                <div className="aspect-square bg-black-pure border border-white/5 relative overflow-hidden flex items-center justify-center">
-                   {item.type === 'video' && (
-                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                         <Play size={32} className="text-white" />
+        <div className="p-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 min-h-[400px]">
+           <AnimatePresence>
+              {items.filter(i => activeTab === 'all' || i.type === activeTab.slice(0, -1)).map((item) => (
+                <motion.div 
+                  key={item.id}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="group space-y-4"
+                >
+                    <div className="aspect-square bg-black-pure border border-white/5 relative overflow-hidden flex items-center justify-center">
+                      {item.type === 'video' && (
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                            <Play size={32} className="text-white" />
+                          </div>
+                      )}
+                      {item.thumbnail ? (
+                        <img src={publicAssetUrl(item.thumbnail)} alt="" className="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
+                      ) : (
+                        <div className="text-white/10 group-hover:text-gold transition-colors">
+                            {item.type === 'video' ? <Video size={40} /> : item.type === 'audio' ? <Music size={40} /> : <ImageIcon size={40} />}
+                        </div>
+                      )}
+                      
+                      <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button 
+                            onClick={() => removeItem(item.id)}
+                            className="p-2 bg-black/60 hover:bg-red-500 transition-colors"
+                          >
+                             <Trash2 size={12} />
+                          </button>
                       </div>
-                   )}
-                   {item.thumbnail ? (
-                     <img src={publicAssetUrl(item.thumbnail)} alt="" className="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700" />
-                   ) : (
-                     <div className="text-white/10 group-hover:text-gold transition-colors">
-                        {item.type === 'video' ? <Video size={40} /> : item.type === 'audio' ? <Music size={40} /> : <ImageIcon size={40} />}
-                     </div>
-                   )}
-                   
-                   <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-2 bg-black/60 hover:bg-red-500 transition-colors"><Trash2 size={12} /></button>
-                   </div>
-                </div>
-                <div className="space-y-1">
-                   <p className="text-[10px] font-black uppercase tracking-widest truncate">{item.title}</p>
-                   <div className="flex justify-between items-center text-[8px] uppercase tracking-widest text-white/20">
-                      <span>{item.size}</span>
-                      <span>{item.date}</span>
-                   </div>
-                </div>
-             </motion.div>
-           ))}
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[10px] font-black uppercase tracking-widest truncate">{item.title}</p>
+                      <div className="flex justify-between items-center text-[8px] uppercase tracking-widest text-white/20">
+                          <span>{item.size}</span>
+                          <span>{item.date}</span>
+                      </div>
+                    </div>
+                </motion.div>
+              ))}
+           </AnimatePresence>
            
-           <button className="aspect-square border-2 border-dashed border-white/5 flex flex-col items-center justify-center gap-4 text-white/20 hover:text-gold hover:border-gold/30 transition-all">
+           <button 
+              onClick={handleUpload}
+              className="aspect-square border-2 border-dashed border-white/5 flex flex-col items-center justify-center gap-4 text-white/20 hover:text-gold hover:border-gold/30 transition-all"
+            >
               <Plus size={24} />
               <span className="text-[9px] uppercase tracking-widest font-black">Add Asset</span>
            </button>
@@ -135,7 +180,7 @@ export function AdminMedia() {
                      <span>10 GB Total</span>
                   </div>
                   <div className="h-1 bg-white/5 w-full">
-                     <div className="h-full bg-gold w-[52%]" />
+                     <div className="h-full bg-gold transition-all duration-1000" style={{ width: `${(items.length / 20) * 100}%` }} />
                   </div>
                </div>
                <p className="text-[8px] uppercase tracking-widest text-white/20 leading-relaxed">Luxury video assets account for 85% of total storage. Upgrade to Infinite Vault for more capacity.</p>
