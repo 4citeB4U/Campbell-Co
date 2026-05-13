@@ -21,6 +21,7 @@ LICENSE: PROPRIETARY
 import { initializeApp } from 'firebase/app';
 import { Auth, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { Firestore, getFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -47,6 +48,7 @@ export const isFirebaseConfigured = requiredFirebaseKeys.every((value) => {
 
 const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null;
 export const db: Firestore | null = app ? getFirestore(app) : null;
+export const storage = app ? getStorage(app) : null;
 export const auth: Auth | null = app ? getAuth(app) : null;
 export const googleProvider = new GoogleAuthProvider();
 

@@ -34,6 +34,7 @@ import CartSidebar from '../components/CartSidebar';
 import Checkout from '../components/Checkout';
 import AvoConcierge from '../components/AvoConcierge';
 import ProductDetailPage from '../components/ProductDetailPage';
+import MemberArea from '../components/MemberArea';
 import { motion, AnimatePresence } from 'motion/react';
 import { usePageAnalytics } from '../hooks/usePageAnalytics';
 import { Link } from 'react-router-dom';
@@ -188,6 +189,7 @@ export default function CustomerSite() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/journal" element={<JournalPage />} />
             <Route path="/card" element={<BusinessCardPage />} />
+            <Route path="/account" element={<MemberArea />} />
             <Route path="/admin" element={<AdminRedirect />} />
           </Routes>
         </AnimatePresence>

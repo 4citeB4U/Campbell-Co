@@ -95,9 +95,9 @@ export default function Header() {
             })}
           </div>
           <div className="flex gap-8 text-[8px] uppercase tracking-[0.3em] text-white font-black">
-            <a href={publicUrl('/admin.html')} className="hover:text-gold transition-colors flex items-center gap-2">
-              <User size={12} className="text-gold" /> Admin
-            </a>
+            <Link to="/account" className="hover:text-gold transition-colors flex items-center gap-2">
+              <User size={12} className="text-gold" /> Account
+            </Link>
             <button className="hover:text-gold transition-colors flex items-center gap-2"><Heart size={12} className="text-gold" /> Wishlist (0)</button>
             <button onClick={toggleCart} className="hover:text-gold transition-colors flex items-center gap-2 relative">
               <ShoppingBag size={12} className="text-gold" /> 

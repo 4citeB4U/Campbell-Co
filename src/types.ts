@@ -73,8 +73,91 @@ export interface Product {
   isPremium?: boolean;
 }
 
-export type CategoryInfo = {
+export interface Order {
   id: string;
-  title: string;
-  image: string;
+  orderNumber: string;
+  status: 'pending' | 'paid' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+  paymentStatus: 'unpaid' | 'paid' | 'partially_refunded' | 'refunded';
+  customerInfo: {
+    id?: string;
+    email: string;
+    phone: string;
+    name: string;
+  };
+  items: {
+    id: string;
+    title: string;
+    price: number;
+    quantity: number;
+    sku: string;
+    image: string;
+  }[];
+  shippingInfo: {
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    trackingNumber?: string;
+  };
+  total: number;
+  internalNotes?: string;
+  createdAt: any;
+  updatedAt: any;
+}
+
+export interface Member {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  signupDate: any;
+  consentStatus: 'accepted' | 'rejected' | 'partial';
+  originalReferrer?: string;
+  utmSource?: string;
+  purchaseHistory: string[]; // Order IDs
+  rewardsBalance: number;
+  lifetimeValue: number;
+  customerTier: 'Member' | 'VIP' | 'Elite' | 'Private Client';
+  adminNotes?: string;
+  wishlist: string[]; // Product IDs
+}
+
+export interface Vendor {
+  id: string;
+  name: string;
+  contactName: string;
+  email: string;
+  commissionPercentage: number;
+  status: 'active' | 'inactive';
+  payoutTracking: {
+    totalEarned: number;
+    pendingPayout: number;
+  };
+}
+
+export interface AIAgent {
+  id: string;
+  name: string;
+  purpose: string;
+  status: 'active' | 'idle' | 'working' | 'alert';
+  tasks: {
+    id: string;
+    title: string;
+    description: string;
+    timestamp: any;
+    status: 'pending' | 'completed' | 'denied';
+  }[];
+  recommendations: {
+    id: string;
+    text: string;
+    actionLabel: string;
+    actionType: string;
+  }[];
+}
+
+export interface ProcurementData {
+  goldPrice: number;
+  diamondPriceIndex: number;
+  lastUpdated: any;
+  supplierCosts: Record<string, number>;
 }
