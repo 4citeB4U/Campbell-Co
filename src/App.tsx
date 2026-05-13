@@ -18,20 +18,20 @@ HOW = Auto-enforced header; update manually with full 5WH detail
 CHAIN: Standards → Integrated → Runtime → Projections
 LICENSE: PROPRIETARY
 */
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import CustomerSite from './apps/CustomerSite';
 import { ProductExperienceProvider } from './context/ProductExperienceContext';
 import { CartProvider } from './context/CartContext';
 
 function App() {
   return (
-    <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <HashRouter basename={import.meta.env.BASE_URL}>
       <ProductExperienceProvider>
         <CartProvider>
           <CustomerSite />
         </CartProvider>
       </ProductExperienceProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
