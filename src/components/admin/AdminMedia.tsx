@@ -18,7 +18,7 @@ HOW = Auto-enforced header; update manually with full 5WH detail
 CHAIN: Standards → Integrated → Runtime → Projections
 LICENSE: PROPRIETARY
 */
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Video, 
@@ -36,6 +36,7 @@ import {
 import { publicAssetUrl } from '../../lib/publicPath';
 
 export function AdminMedia() {
+  const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const [activeTab, setActiveTab] = useState<'all' | 'video' | 'images' | 'audio'>('all');
   const [items, setItems] = useState([
     { id: '1', type: 'video', title: 'Summer Collection Hero', size: '12.4 MB', date: '2 hours ago', thumbnail: '' },
@@ -44,27 +45,43 @@ export function AdminMedia() {
     { id: '4', type: 'audio', title: 'Luxury Ambient - Store Loop', size: '3.2 MB', date: '2 days ago', thumbnail: '' },
   ]);
   const [uploading, setUploading] = useState(false);
+  const [selectedId, setSelectedId] = useState('1');
+  const typeMap: Record<'all' | 'video' | 'images' | 'audio', string | null> = {
+    all: null,
+    video: 'video',
+    images: 'image',
+    audio: 'audio',
+  };
 
   const handleUpload = () => {
+    uploadInputRef.current?.click();
+  };
+
+  const handleFileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
     setUploading(true);
-    // Simulate luxury asset upload
     setTimeout(() => {
       const newItem = {
         id: Date.now().toString(),
-        type: Math.random() > 0.5 ? 'video' : 'image',
-        title: `Asset_${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
-        size: `${(Math.random() * 20).toFixed(1)} MB`,
+        type: file.type.startsWith('video') ? 'video' : file.type.startsWith('audio') ? 'audio' : 'image',
+        title: file.name.replace(/\.[^.]+$/, ''),
+        size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
         date: 'Just now',
-        thumbnail: ''
+        thumbnail: file.type.startsWith('image') || file.type.startsWith('video') ? URL.createObjectURL(file) : ''
       };
       setItems([newItem, ...items]);
+      setSelectedId(newItem.id);
       setUploading(false);
     }, 2500);
+    event.target.value = '';
   };
 
   const removeItem = (id: string) => {
     setItems(items.filter(item => item.id !== id));
   };
+
+  const selectedItem = items.find((item) => item.id === selectedId) || items[0];
 
   return (
     <div className="space-y-10 pb-20">
@@ -87,8 +104,10 @@ export function AdminMedia() {
           )}
           {uploading ? 'Encoding Asset...' : 'Upload New Asset'}
         </button>
+        <input ref={uploadInputRef} type="file" accept="image/*,video/*,audio/*" onChange={handleFileSelected} className="hidden" />
       </div>
 
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_340px] gap-10">
       <div className="bg-[#111] border border-white/5 overflow-hidden">
         <div className="p-6 border-b border-white/5 bg-[#050505] flex flex-wrap gap-6 items-center justify-between">
            <div className="flex gap-4">
@@ -116,7 +135,7 @@ export function AdminMedia() {
 
         <div className="p-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 min-h-[400px]">
            <AnimatePresence>
-              {items.filter(i => activeTab === 'all' || i.type === activeTab.slice(0, -1)).map((item) => (
+              {items.filter(i => typeMap[activeTab] === null || i.type === typeMap[activeTab]).map((item) => (
                 <motion.div 
                   key={item.id}
                   layout
@@ -124,8 +143,9 @@ export function AdminMedia() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   className="group space-y-4"
+                  onClick={() => setSelectedId(item.id)}
                 >
-                    <div className="aspect-square bg-black-pure border border-white/5 relative overflow-hidden flex items-center justify-center">
+                    <div className={`aspect-square bg-black-pure border relative overflow-hidden flex items-center justify-center ${selectedId === item.id ? 'border-gold' : 'border-white/5'}`}>
                       {item.type === 'video' && (
                           <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
                             <Play size={32} className="text-white" />
@@ -167,6 +187,35 @@ export function AdminMedia() {
               <span className="text-[9px] uppercase tracking-widest font-black">Add Asset</span>
            </button>
         </div>
+      </div>
+      <aside className="bg-[#050505] border border-white/5 p-8 space-y-6">
+         <div className="flex items-center justify-between border-b border-white/5 pb-4">
+            <h3 className="text-[11px] uppercase tracking-[0.3em] font-black">Selected Asset Preview</h3>
+            {selectedItem && <span className="text-[8px] uppercase tracking-widest text-white/20">{selectedItem.type}</span>}
+         </div>
+         {selectedItem ? (
+           <div className="space-y-5">
+              <div className="aspect-video bg-black-pure border border-white/10 overflow-hidden flex items-center justify-center">
+                 {selectedItem.thumbnail ? (
+                   <img src={publicAssetUrl(selectedItem.thumbnail)} alt="" className="w-full h-full object-cover" />
+                 ) : (
+                   <div className="text-white/15">
+                      {selectedItem.type === 'video' ? <Video size={42} /> : selectedItem.type === 'audio' ? <Music size={42} /> : <ImageIcon size={42} />}
+                   </div>
+                 )}
+              </div>
+              <div className="space-y-2">
+                 <p className="text-[10px] uppercase tracking-[0.3em] text-gold font-black">{selectedItem.title}</p>
+                 <p className="text-[8px] uppercase tracking-[0.2em] text-white/35">{selectedItem.size} • {selectedItem.date}</p>
+                 <p className="text-[9px] uppercase tracking-[0.18em] leading-relaxed text-white/45">
+                    This preview confirms the asset loaded into the media studio. Public storefront placement still requires you to assign the asset inside the site-control or content area that uses it.
+                 </p>
+              </div>
+           </div>
+         ) : (
+           <p className="text-[9px] uppercase tracking-[0.18em] leading-relaxed text-white/35">Choose an uploaded asset to preview it here.</p>
+         )}
+      </aside>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">

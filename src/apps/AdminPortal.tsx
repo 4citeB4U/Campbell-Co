@@ -157,7 +157,7 @@ export default function AdminPortal() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col lg:flex-row h-screen overflow-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col lg:flex-row lg:h-screen overflow-x-hidden">
       
       {/* Sidebar - Desktop */}
       <aside className="hidden lg:flex w-72 bg-[#050505] border-r border-white/5 flex-col shrink-0">
@@ -213,7 +213,7 @@ export default function AdminPortal() {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 bg-[#0a0a0a]">
          {/* Header */}
-         <header className="h-20 bg-[#050505] border-b border-white/5 flex items-center justify-between px-6 lg:px-12 shrink-0 z-50">
+         <header className="h-20 bg-[#050505] border-b border-white/5 flex items-center justify-between px-4 lg:px-12 shrink-0 z-50 sticky top-0">
             <div className="flex items-center gap-6">
                <button className="lg:hidden p-2 -ml-2" onClick={() => setMobileMenuOpen(true)}>
                   <Menu size={20} />
@@ -237,8 +237,26 @@ export default function AdminPortal() {
             </div>
          </header>
 
+         <div className="lg:hidden border-b border-white/5 bg-[#050505] px-4 py-3 overflow-x-auto no-scrollbar">
+            <div className="flex gap-3 min-w-max">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveSection(item.id as AdminSection)}
+                  className={`px-4 py-3 border text-[8px] uppercase tracking-[0.28em] font-black whitespace-nowrap transition-all ${
+                    activeSection === item.id
+                      ? 'border-gold bg-gold text-black-pure'
+                      : 'border-white/10 text-white/45'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+         </div>
+
          {/* Content Viewport */}
-         <div className="flex-1 overflow-y-auto custom-scrollbar p-6 lg:p-12">
+         <div className="flex-1 overflow-y-auto custom-scrollbar p-4 lg:p-12">
             <AnimatePresence mode="wait">
                <motion.div
                  key={activeSection}

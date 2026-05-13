@@ -88,10 +88,10 @@ export function AdminCMS() {
   );
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] gap-6">
+    <div className="flex flex-col gap-6 lg:h-[calc(100vh-140px)]">
       
       {/* Header Bar */}
-      <div className="flex items-center justify-between bg-[#111] border border-white/5 p-4 rounded-sm shrink-0">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between bg-[#111] border border-white/5 p-4 rounded-sm shrink-0">
          <div className="flex items-center gap-6">
             <h3 className="text-[10px] uppercase tracking-[0.5em] font-black text-white/40">Visual Editor</h3>
             <div className="h-4 w-px bg-white/10" />
@@ -101,7 +101,7 @@ export function AdminCMS() {
             </div>
          </div>
          
-         <div className="flex items-center gap-6">
+         <div className="flex items-center gap-4 lg:gap-6 flex-wrap">
             {status && (
                <span className={`text-[8px] uppercase tracking-widest font-black ${status.includes('UNSAVED') ? 'text-yellow-500' : 'text-green-500'}`}>
                   {status}
@@ -120,17 +120,17 @@ export function AdminCMS() {
          </div>
       </div>
 
-      <div className="flex-1 flex gap-6 min-h-0">
+      <div className="flex-1 flex flex-col xl:flex-row gap-6 min-h-0">
          
          {/* Control Sidebar */}
-         <aside className="w-80 flex flex-col bg-[#111] border border-white/5 rounded-sm overflow-hidden shrink-0">
+         <aside className="w-full xl:w-80 flex flex-col bg-[#111] border border-white/5 rounded-sm overflow-hidden shrink-0">
             <div className="flex border-b border-white/5">
                <button onClick={() => setActivePanel('content')} className={`flex-1 py-4 text-[8px] uppercase tracking-widest font-black transition-all ${activePanel === 'content' ? 'bg-white/5 text-gold' : 'text-white/20 hover:text-white'}`}>Content</button>
                <button onClick={() => setActivePanel('style')} className={`flex-1 py-4 text-[8px] uppercase tracking-widest font-black transition-all ${activePanel === 'style' ? 'bg-white/5 text-gold' : 'text-white/20 hover:text-white'}`}>Design</button>
                <button onClick={() => setActivePanel('layout')} className={`flex-1 py-4 text-[8px] uppercase tracking-widest font-black transition-all ${activePanel === 'layout' ? 'bg-white/5 text-gold' : 'text-white/20 hover:text-white'}`}>Layout</button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 custom-scrollbar space-y-8">
+            <div className="overflow-y-auto p-6 custom-scrollbar space-y-8 xl:flex-1 max-h-[420px] xl:max-h-none">
                <AnimatePresence mode="wait">
                   {activePanel === 'content' && (
                     <motion.div 
@@ -199,7 +199,7 @@ export function AdminCMS() {
          </aside>
 
          {/* Visual Preview */}
-         <main className="flex-1 bg-[#050505] border border-white/5 rounded-sm relative overflow-hidden flex flex-col">
+         <main className="flex-1 bg-[#050505] border border-white/5 rounded-sm relative overflow-hidden flex flex-col min-h-[520px]">
             <div className="p-3 border-b border-white/5 bg-[#111] flex items-center justify-between shrink-0">
                <div className="flex gap-1.5">
                   <div className="w-2 h-2 rounded-full bg-red-500/20" />

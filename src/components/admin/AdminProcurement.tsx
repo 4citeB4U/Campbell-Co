@@ -40,6 +40,9 @@ interface ProcurementProps {
 export function AdminProcurement({ data }: ProcurementProps) {
   if (!data) return <div className="text-[10px] uppercase tracking-widest text-white/40">Loading market intelligence...</div>;
 
+  const materials = data.materials || [];
+  const alerts = data.alerts || [];
+
   return (
     <div className="space-y-10 pb-20">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -81,6 +84,36 @@ export function AdminProcurement({ data }: ProcurementProps) {
         />
       </div>
 
+      <div className="bg-[#050505] border border-white/5 p-8 lg:p-10 space-y-8">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between border-b border-white/5 pb-6">
+          <div>
+            <h3 className="text-[12px] uppercase tracking-[0.4em] font-black">Detailed Material Intelligence</h3>
+            <p className="text-[9px] uppercase tracking-[0.25em] text-white/30 mt-2">Diamond, gemstone, and precious-metal detail by specification rather than one blended market number.</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {materials.map((material) => (
+            <div key={material.id} className="border border-white/10 bg-[#111] p-6 space-y-4">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-[9px] uppercase tracking-[0.4em] text-gold font-black">{material.label}</p>
+                  <h4 className="text-[11px] uppercase tracking-[0.25em] font-black text-white mt-2">{material.specification}</h4>
+                </div>
+                <div className={`flex items-center gap-1 text-[9px] font-black ${material.trendUp ? 'text-green-500' : 'text-red-500'}`}>
+                  {material.trendUp ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                  {material.trend}
+                </div>
+              </div>
+              <div className="flex items-end justify-between gap-4">
+                <div className="text-2xl font-serif text-white">${material.unitPrice.toLocaleString()}</div>
+                <div className="text-[8px] uppercase tracking-[0.25em] text-white/30">{material.unitLabel}</div>
+              </div>
+              <p className="text-[9px] uppercase tracking-[0.2em] leading-relaxed text-white/45">{material.note}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-10">
          <div className="xl:col-span-2 bg-[#111] border border-white/5 p-10 space-y-10">
             <div className="flex justify-between items-center border-b border-white/5 pb-6">
@@ -88,16 +121,14 @@ export function AdminProcurement({ data }: ProcurementProps) {
                <BarChart2 size={18} className="text-white/20" />
             </div>
             <div className="space-y-6">
-               <RecommendationRow 
-                  title="Reprice 14K Yellow Gold Chains" 
-                  reason="Gold spot price hit $2,350/oz. Current margin below 40%." 
-                  impact="+$12,400 Monthly Revenue"
-               />
-               <RecommendationRow 
-                  title="Bulk Buy: 1ct VS1 Lab Diamonds" 
-                  reason="IDEX Index indicates temporary dip. Supplier A offering 5% rebate." 
-                  impact="-12% Cost Basis"
-               />
+               {alerts.map((alert) => (
+                 <RecommendationRow 
+                   key={alert.id}
+                   title={alert.title}
+                   reason={alert.reason}
+                   impact={alert.impact}
+                 />
+               ))}
             </div>
          </div>
 

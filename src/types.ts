@@ -165,4 +165,21 @@ export interface ProcurementData {
   diamondPriceIndex: number;
   lastUpdated: any;
   supplierCosts: Record<string, number>;
+  materials?: Array<{
+    id: string;
+    label: string;
+    category: 'diamond' | 'gem' | 'gold' | 'metal';
+    specification: string;
+    unitPrice: number;
+    unitLabel: string;
+    trend: string;
+    trendUp: boolean;
+    note: string;
+  }>;
+  alerts?: Array<{
+    id: string;
+    title: string;
+    reason: string;
+    impact: string;
+  }>;
 }

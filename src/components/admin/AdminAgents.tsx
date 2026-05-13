@@ -58,10 +58,10 @@ export function AdminAgents({ agents, onApprove }: AgentsProps) {
         agents.forEach(agent => {
           if (!newLogs[agent.id]) newLogs[agent.id] = [];
           const randomTasks = [
-            `Analyzing ${agent.id === 'site-manager' ? 'live visitor behavior' : 'inventory margins'}...`,
-            `Updating ${agent.id === 'sales-agent' ? 'dynamic pricing model' : 'supply chain cache'}...`,
-            `Executing routine ${agent.id === 'security-agent' ? 'firewall audit' : 'database optimization'}...`,
-            `Monitoring ${agent.id === 'customer-care-agent' ? 'inbound sentiment' : 'global gold prices'}...`
+            `Analyzing ${agent.id === 'site-manager' ? 'live visitor behavior' : agent.id === 'partner-agent' ? 'new marketplace setup links' : 'diamond inventory margins'}...`,
+            `Updating ${agent.id === 'sales-agent' ? 'diamond financing recommendations' : agent.id === 'procurement-agent' ? 'clarity-grade sourcing cache' : 'operational rule set'}...`,
+            `Executing routine ${agent.id === 'security-agent' ? 'firewall audit' : agent.id === 'partner-agent' ? 'permission checklist sync' : 'market intelligence refresh'}...`,
+            `Monitoring ${agent.id === 'customer-care-agent' ? 'inbound sentiment' : agent.id === 'procurement-agent' ? 'natural, lab, and fancy-color stone pricing' : 'global payment readiness'}...`
           ];
           const newLog = `[${new Date().toLocaleTimeString()}] ${randomTasks[Math.floor(Math.random() * randomTasks.length)]}`;
           newLogs[agent.id] = [newLog, ...newLogs[agent.id]].slice(0, 50);
@@ -75,9 +75,9 @@ export function AdminAgents({ agents, onApprove }: AgentsProps) {
   const activeAgent = selectedAgent || agents[0];
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] gap-6">
+    <div className="flex flex-col gap-6 lg:h-[calc(100vh-140px)]">
       
-      <div className="flex items-center justify-between shrink-0">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between shrink-0">
          <div className="space-y-2">
             <span className="text-[10px] uppercase tracking-[0.8em] text-gold font-black">Sovereign Workforce</span>
             <h2 className="text-4xl font-serif tracking-widest uppercase">Agent Intelligence</h2>
@@ -88,10 +88,10 @@ export function AdminAgents({ agents, onApprove }: AgentsProps) {
          </div>
       </div>
 
-      <div className="flex-1 flex gap-6 min-h-0">
+      <div className="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
          
          {/* Agent Selector Sidebar */}
-         <aside className="w-80 bg-[#111] border border-white/5 rounded-sm overflow-hidden flex flex-col shrink-0">
+         <aside className="w-full lg:w-80 bg-[#111] border border-white/5 rounded-sm overflow-hidden flex flex-col shrink-0 lg:max-h-none max-h-[320px]">
             <div className="p-6 border-b border-white/5 bg-[#050505]">
                <span className="text-[9px] uppercase tracking-widest text-white/30 font-black">Active Identities</span>
             </div>
@@ -131,11 +131,11 @@ export function AdminAgents({ agents, onApprove }: AgentsProps) {
                <AgentStatCard label="Decisions" value="12,402" icon={Cpu} />
             </div>
 
-            <div className="flex-1 flex gap-6 min-h-0">
+            <div className="flex-1 flex flex-col xl:flex-row gap-6 min-h-0">
                
                {/* Terminal & Recommendations */}
-               <div className="flex-1 flex flex-col gap-6">
-                  <section className="flex-1 bg-[#050505] border border-white/5 rounded-sm flex flex-col overflow-hidden">
+               <div className="flex-1 flex flex-col gap-6 min-h-0">
+                  <section className="bg-[#050505] border border-white/5 rounded-sm flex flex-col overflow-hidden min-h-[320px] xl:flex-1">
                      <div className="p-4 border-b border-white/5 bg-[#111] flex items-center justify-between">
                         <div className="flex items-center gap-3">
                            <Terminal size={14} className="text-gold" />
@@ -156,7 +156,7 @@ export function AdminAgents({ agents, onApprove }: AgentsProps) {
                      </div>
                   </section>
 
-                  <section className="h-64 bg-[#111] border border-white/5 rounded-sm p-6 space-y-6 overflow-y-auto custom-scrollbar">
+                  <section className="bg-[#111] border border-white/5 rounded-sm p-6 space-y-6 overflow-y-auto custom-scrollbar min-h-[260px] xl:h-64">
                      <h3 className="text-[10px] uppercase tracking-[0.4em] font-black text-white/40 border-b border-white/5 pb-3">Operational Directives</h3>
                      <div className="space-y-4">
                         {activeAgent.recommendations.map((rec) => (
@@ -181,7 +181,7 @@ export function AdminAgents({ agents, onApprove }: AgentsProps) {
                </div>
 
                {/* Agent Profile Panel */}
-               <aside className="w-80 bg-[#111] border border-white/5 rounded-sm p-8 space-y-10 shrink-0">
+               <aside className="w-full xl:w-80 bg-[#111] border border-white/5 rounded-sm p-6 lg:p-8 space-y-10 shrink-0">
                   <div className="text-center space-y-6">
                      <div className="w-32 h-32 mx-auto border border-gold/20 p-2 rotate-45 group">
                         <div className="w-full h-full bg-gold/5 flex items-center justify-center -rotate-45">

@@ -18,7 +18,7 @@ HOW = Auto-enforced header; update manually with full 5WH detail
 CHAIN: Standards → Integrated → Runtime → Projections
 LICENSE: PROPRIETARY
 */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { 
   ShieldCheck, 
@@ -35,7 +35,45 @@ import {
   LogOut
 } from 'lucide-react';
 
+type CommerceSetup = {
+  stripeDashboard: string;
+  bnplProvider: string;
+  coinbaseBusiness: string;
+  marketFeedNotes: string;
+};
+
+const COMMERCE_SETUP_KEY = 'campbell-commerce-setup';
+
 export function AdminSettings() {
+  const [commerceSetup, setCommerceSetup] = useState<CommerceSetup>({
+    stripeDashboard: '',
+    bnplProvider: '',
+    coinbaseBusiness: '',
+    marketFeedNotes: '',
+  });
+  const [savedMessage, setSavedMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem(COMMERCE_SETUP_KEY);
+    if (saved) {
+      try {
+        setCommerceSetup(JSON.parse(saved) as CommerceSetup);
+      } catch {
+        // Ignore malformed saved config.
+      }
+    }
+  }, []);
+
+  const updateSetup = (field: keyof CommerceSetup, value: string) => {
+    setCommerceSetup((current) => ({ ...current, [field]: value }));
+  };
+
+  const saveSetup = () => {
+    window.localStorage.setItem(COMMERCE_SETUP_KEY, JSON.stringify(commerceSetup));
+    setSavedMessage('Saved locally. Add live provider links and credentials later.');
+    window.setTimeout(() => setSavedMessage(null), 3000);
+  };
+
   return (
     <div className="space-y-16 pb-32">
       <div className="space-y-4">
@@ -57,6 +95,46 @@ export function AdminSettings() {
                <SettingsToggle label="Agent Autonomy" description="Allow AI agents to execute non-financial directives without approval." active={true} />
                <SettingsToggle label="Luxury Obfuscation" description="Hide sensitive analytics from standard staff roles." active={true} />
             </SettingsSection>
+
+            <div className="space-y-8">
+               <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                  <h3 className="text-[12px] uppercase tracking-[0.4em] font-black">Commerce & Data Connections</h3>
+                  <button onClick={saveSetup} className="px-5 py-3 bg-gold text-black-pure text-[9px] uppercase tracking-[0.3em] font-black hover:bg-white transition-all">
+                     Save Setup
+                  </button>
+               </div>
+               {savedMessage && (
+                  <div className="border border-gold/20 bg-gold/5 p-4 text-[9px] uppercase tracking-[0.25em] text-gold font-black">
+                     {savedMessage}
+                  </div>
+               )}
+               <div className="grid grid-cols-1 gap-6">
+                  <SettingsInput
+                    label="Stripe Dashboard or Payment Link"
+                    value={commerceSetup.stripeDashboard}
+                    onChange={(value) => updateSetup('stripeDashboard', value)}
+                    description="Paste your Stripe dashboard URL, payment link, or checkout control URL when payments are ready."
+                  />
+                  <SettingsInput
+                    label="Installment / BNPL Provider"
+                    value={commerceSetup.bnplProvider}
+                    onChange={(value) => updateSetup('bnplProvider', value)}
+                    description="Store the provider you choose for monthly financing, such as Affirm, Klarna, or another approved lender."
+                  />
+                  <SettingsInput
+                    label="Coinbase Business / Crypto Payments"
+                    value={commerceSetup.coinbaseBusiness}
+                    onChange={(value) => updateSetup('coinbaseBusiness', value)}
+                    description="Paste your Coinbase Business dashboard or crypto payment setup link here."
+                  />
+                  <SettingsTextArea
+                    label="Market Feed Notes"
+                    value={commerceSetup.marketFeedNotes}
+                    onChange={(value) => updateSetup('marketFeedNotes', value)}
+                    description="Track where diamond, gemstone, and metal pricing should come from once your market-data provider is chosen."
+                  />
+               </div>
+            </div>
             
             <div className="p-10 bg-red-500/5 border border-red-500/20 space-y-6">
                <h3 className="text-[11px] uppercase tracking-[0.4em] font-black text-red-500">Danger Zone</h3>
@@ -142,6 +220,60 @@ function SystemInfoRow({ label, value }: { label: string, value: string }) {
     <div className="flex justify-between items-center">
        <span className="text-[8px] uppercase tracking-widest text-white/30">{label}</span>
        <span className="text-[8px] uppercase tracking-widest font-black text-white/60">{value}</span>
+    </div>
+  );
+}
+
+function SettingsInput({
+  label,
+  value,
+  description,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  description: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="bg-[#111] border border-white/5 p-6 space-y-4">
+      <div className="space-y-2">
+        <label className="text-[9px] uppercase tracking-widest text-white/30 font-black">{label}</label>
+        <p className="text-[9px] uppercase tracking-[0.18em] text-white/35 leading-relaxed">{description}</p>
+      </div>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full bg-black-pure border border-white/10 p-4 text-[10px] uppercase tracking-[0.18em] text-white outline-none focus:border-gold"
+      />
+    </div>
+  );
+}
+
+function SettingsTextArea({
+  label,
+  value,
+  description,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  description: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="bg-[#111] border border-white/5 p-6 space-y-4">
+      <div className="space-y-2">
+        <label className="text-[9px] uppercase tracking-widest text-white/30 font-black">{label}</label>
+        <p className="text-[9px] uppercase tracking-[0.18em] text-white/35 leading-relaxed">{description}</p>
+      </div>
+      <textarea
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={4}
+        className="w-full bg-black-pure border border-white/10 p-4 text-[10px] uppercase tracking-[0.18em] text-white outline-none focus:border-gold leading-relaxed"
+      />
     </div>
   );
 }

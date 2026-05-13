@@ -25,7 +25,7 @@ import { CartProvider } from './context/CartContext';
 
 function App() {
   return (
-    <HashRouter basename={import.meta.env.BASE_URL}>
+    <HashRouter>
       <ProductExperienceProvider>
         <CartProvider>
           <CustomerSite />
