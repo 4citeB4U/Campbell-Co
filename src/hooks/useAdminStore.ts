@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#39FF14
+FLUO=#0DFF94
+PASTEL=#C7FFD8
+
+ICON_ASCII:
+family=lucide
+glyph=cpu
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: CORE
 TAG: CORE.SRC.HOOKS.USE_ADMIN_STORE.MAIN
 DESCRIPTION: Admin state and data management hook for the Luxury OS.
@@ -48,44 +62,141 @@ export function useAdminStore() {
     if (!db) {
       // Mock data for local demo
       setOrders([]);
-      setMembers([]);
+      const localMembers = localStorage.getItem('campbell-members');
+      if (localMembers) {
+        setMembers(JSON.parse(localMembers));
+      } else {
+        const seedMembers: Member[] = [
+          {
+            id: 'member-evelyn',
+            name: 'Evelyn Harper',
+            email: 'evelyn.harper@harperluxury.com',
+            phone: '555-0199',
+            customerTier: 'VIP',
+            rewardsBalance: 12450,
+            lifetimeValue: 24500,
+            consentStatus: 'accepted',
+            signupDate: new Date().toISOString(),
+            purchaseHistory: [],
+            wishlist: []
+          }
+        ];
+        localStorage.setItem('campbell-members', JSON.stringify(seedMembers));
+        setMembers(seedMembers);
+      }
       setVendors([]);
       setAgents([
         {
-          id: 'site-manager',
-          name: 'Site Manager',
-          purpose: 'Monitors site health and load times',
+          id: 'agent-lee-prime',
+          name: 'Agent Lee Prime',
+          title: 'Sovereign Orchestrator',
+          department: 'Executive Core',
+          family: 'core',
+          purpose: 'System-wide orchestrator and final speaker. Enforces the LeeWay Constitution across all modules.',
           status: 'active',
-          tasks: [],
-          recommendations: []
-        },
-        {
-          id: 'sales-agent',
-          name: 'Sales Intelligence',
-          purpose: 'Identifies high-intent shoppers',
-          status: 'active',
-          tasks: [],
-          recommendations: [{ id: '1', text: 'Recommend follow-up for high-intent diamond inquiry and abandoned cart #882', actionLabel: 'Send SMS', actionType: 'marketing' }]
-        },
-        {
-          id: 'procurement-agent',
-          name: 'Procurement Specialist',
-          purpose: 'Monitors diamond, gemstone, and precious metal markets',
-          status: 'alert',
+          authorityLevel: 'Full Sovereign Control',
+          sourceAgent: 'LEE_PRIME',
+          lineage: 'LeeWay-Standards/src/core/lee-prime',
+          capabilities: ['orchestration', 'synthesis', 'sovereignty', 'final-speaker'],
+          responsibilities: [
+            'Finalize all administrative outputs',
+            'Enforce zero-trust security policies',
+            'Coordinate multi-agent task sequences',
+          ],
+          operatingMode: 'connected',
           tasks: [],
           recommendations: [
-            { id: '2', text: 'Natural round VS1 stones softened this week. Review buy window for 1.00ct to 1.49ct inventory.', actionLabel: 'Review Buy', actionType: 'procurement' },
-            { id: '3', text: '14K white gold costs moved above target. Adjust bridal ring margin bands.', actionLabel: 'Update Margin', actionType: 'pricing' }
+            { id: 'prime-1', text: 'Initialize full 8-Stage Sovereign Cycle for the next site publication.', actionLabel: 'Begin Cycle', actionType: 'orchestration' },
           ]
         },
         {
-          id: 'partner-agent',
-          name: 'Partner Integration',
-          purpose: 'Tracks external marketplace, affiliate, and vendor setup links',
-          status: 'idle',
+          id: 'nova-forge-agent',
+          name: 'Nova',
+          title: 'Logic & Code Architect',
+          department: 'Engineering',
+          family: 'forge',
+          purpose: 'High-fidelity code generation and structural refactoring. Maintains architectural integrity.',
+          status: 'active',
+          authorityLevel: 'Structural Mutation',
+          sourceAgent: 'NOVA',
+          lineage: 'LeeWay-Standards/src/agents/forge',
+          capabilities: ['code-gen', 'refactor', 'optimization', 'logic-forge'],
+          responsibilities: [
+            'Maintain codebase hygiene and headers',
+            'Optimize React component performance',
+            'Audit logic drift in custom modules',
+          ],
+          operatingMode: 'advisory',
           tasks: [],
           recommendations: [
-            { id: '4', text: 'Add Amazon, vendor, and payment-provider dashboard links once permissions are approved.', actionLabel: 'Open Setup', actionType: 'setup' }
+            { id: 'nova-1', text: 'Detected structural drift in the product grid layout. Recommend refactoring into governed sub-components.', actionLabel: 'Review Forge', actionType: 'engineering' }
+          ]
+        },
+        {
+          id: 'atlas-memory-agent',
+          name: 'Atlas',
+          title: 'Knowledge & Memory Keeper',
+          department: 'Intelligence',
+          family: 'memory',
+          purpose: 'Manages the Triple-Threat memory stores. Ensures long-term continuity and knowledge retrieval.',
+          status: 'active',
+          authorityLevel: 'Semantic Retrieval',
+          sourceAgent: 'ATLAS',
+          lineage: 'LeeWay-Standards/src/agents/memory',
+          capabilities: ['vector-search', 'indexing', 'persistence', 'semantic-memory'],
+          responsibilities: [
+            'Index private client preferences',
+            'Retrieve historical sourcing data',
+            'Maintain the business context mesh',
+          ],
+          operatingMode: 'connected',
+          tasks: [],
+          recommendations: [{ id: 'atlas-1', text: 'Semantic overlap detected in customer feedback tags. Consolidate for better recommendation accuracy.', actionLabel: 'Optimize Memory', actionType: 'intelligence' }]
+        },
+        {
+          id: 'shield-governor-agent',
+          name: 'Shield Governor Serah Kane',
+          title: 'Security & Compliance Officer',
+          department: 'Sovereign Security',
+          family: 'security',
+          purpose: 'Enforces constitutional runtime boundaries and reviews protected actions.',
+          status: 'active',
+          authorityLevel: 'Policy Enforcement',
+          sourceAgent: 'SHIELD_GOVERNOR',
+          lineage: 'LeeWay-Standards/src/core/security',
+          capabilities: ['zone-enforcement', 'plugin-approval', 'protected-review', 'incident-receipts'],
+          responsibilities: [
+            'Audit administrative permission requests',
+            'Enforce zero-trust boundaries',
+            'Verify third-party script safety',
+          ],
+          operatingMode: 'connected',
+          tasks: [],
+          recommendations: [
+            { id: 'shield-1', text: 'Unverified third-party script attempt detected in marketing block. Blocked by default.', actionLabel: 'Review Incident', actionType: 'security' }
+          ]
+        },
+        {
+          id: 'aura-media-agent',
+          name: 'Aura',
+          title: 'Experience & Interface Design',
+          department: 'Creative Strategy',
+          family: 'media',
+          purpose: 'Governs the visual identity and emotional presence of the House of Campbell.',
+          status: 'idle',
+          authorityLevel: 'Visual Identity Authority',
+          sourceAgent: 'AURA',
+          lineage: 'LeeWay-Standards/src/agents/media',
+          capabilities: ['ui-ux', 'voice-synth', 'media-gen', 'style-governance'],
+          responsibilities: [
+            'Maintain luxury brand aesthetics',
+            'Generate marketing assets and icons',
+            'Oversee concierge voice personality',
+          ],
+          operatingMode: 'standby',
+          tasks: [],
+          recommendations: [
+            { id: 'aura-1', text: 'Color palette drift detected on mobile views. Re-aligning to secondary gold tokens.', actionLabel: 'Apply Style', actionType: 'design' }
           ]
         }
       ]);
@@ -234,8 +345,36 @@ export function useAdminStore() {
   };
 
   const approveAgentTask = async (agentId: string, taskId: string) => {
-    // Logic to "approve" a task, which might trigger a real action
     console.log(`Approving task ${taskId} for agent ${agentId}`);
+    
+    // Dynamically update local state
+    setAgents((currentAgents) => {
+      return currentAgents.map((agent) => {
+        if (agent.id === agentId) {
+          return {
+            ...agent,
+            status: 'working',
+            recommendations: agent.recommendations.filter(r => r.id !== taskId)
+          };
+        }
+        return agent;
+      });
+    });
+
+    // Schedule restore to active/idle state after task resolves
+    setTimeout(() => {
+      setAgents((currentAgents) => {
+        return currentAgents.map((agent) => {
+          if (agent.id === agentId) {
+            return {
+              ...agent,
+              status: agentId === 'aura-media-agent' ? 'idle' : 'active'
+            };
+          }
+          return agent;
+        });
+      });
+    }, 2800);
   };
 
   return {

@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.HEADER.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -23,14 +37,29 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, ShoppingBag, User, Heart, Menu, X, ChevronDown, ShieldCheck, Truck, Award } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useCart } from '../context/CartContext';
-import { MASTER_PRODUCTS } from '../constants';
+import { useProducts } from '../hooks/useProducts';
 import { Product } from '../types';
 import { useSiteContent } from '../hooks/useSiteContent';
 import { publicAssetUrl, publicUrl } from '../lib/publicPath';
+import { useLeeWayID } from '../hooks/useLeeWayID';
 
 export default function Header() {
+  useLeeWayID({
+    id: 'public.header',
+    label: 'Global Header',
+    tag: 'UI.PUBLIC.HEADER',
+    region: 'PUBLIC',
+    ownerAgent: 'Aura',
+    authority: 'AdminOS',
+    tracePath: ['AdminOS', 'SiteContent', 'Published', 'CustomerSite', 'Header'],
+    auditCategory: 'content.publish',
+    status: 'active',
+    hardCoded: false,
+  });
+
   const { toggleCart, totalItems } = useCart();
   const { content } = useSiteContent();
+  const { products } = useProducts();
   const navigate = useNavigate();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -48,7 +77,7 @@ export default function Header() {
 
   useEffect(() => {
     if (searchQuery.trim().length > 1) {
-      const filtered = MASTER_PRODUCTS.filter(p => 
+      const filtered = products.filter(p => 
         p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.tags.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -57,7 +86,7 @@ export default function Header() {
     } else {
       setSearchResults([]);
     }
-  }, [searchQuery]);
+  }, [searchQuery, products]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -80,7 +109,13 @@ export default function Header() {
   return (
     <>
       {/* Top Trust Bar */}
-      <div className="bg-[#050505] border-b border-gold/10 py-3 hidden lg:block relative z-[60]">
+      <div 
+        id="header-trust-bar" 
+        className="bg-[#050505] border-b border-gold/10 py-3 hidden lg:block relative z-[60]"
+        data-leeway-id="public.header"
+        data-leeway-tag="UI.PUBLIC.HEADER"
+        data-owner-agent="Aura"
+      >
         <div className="max-w-[1700px] mx-auto px-12 flex justify-between items-center">
           <div className="flex gap-10">
             {content.header.benefits.map((benefit, index) => {
@@ -108,6 +143,7 @@ export default function Header() {
       </div>
 
       <header 
+        id="main-navigation-header"
         className={`fixed lg:sticky top-0 left-0 right-0 z-50 transition-all duration-700 ${
           isScrolled ? 'bg-black-pure/95 backdrop-blur-md py-4 shadow-[0_10px_30px_rgba(0,0,0,0.5)]' : 'bg-black-pure py-8'
         }`}
@@ -122,7 +158,7 @@ export default function Header() {
           </button>
 
           {/* Luxury Logo */}
-          <div className="flex-none text-center lg:text-left">
+          <div id="header-logo-container" className="flex-none text-center lg:text-left">
             <Link to="/" className="flex flex-col group">
               <span className="font-serif text-3xl lg:text-4xl tracking-[0.2em] text-white group-hover:text-gold transition-colors uppercase leading-none">
                 CAMPBELL <span className="text-gold">&</span> CO.
@@ -132,7 +168,7 @@ export default function Header() {
           </div>
 
           {/* GLOBAL SEARCH SYSTEM */}
-          <div className="hidden lg:flex flex-1 max-w-xl relative" ref={searchRef}>
+          <div id="header-search-system" className="hidden lg:flex flex-1 max-w-xl relative" ref={searchRef}>
             <div 
               className={`flex items-center w-full bg-[#0a0a0a] border ${
                 isSearchOpen ? 'border-gold shadow-[0_0_20px_rgba(214,180,106,0.15)]' : 'border-gold/20'
@@ -206,7 +242,7 @@ export default function Header() {
             </AnimatePresence>
           </div>
 
-          <nav className="hidden xl:flex items-center gap-10">
+          <nav id="header-nav-items" className="hidden xl:flex items-center gap-10">
             {navItems.map((item) => (
               <Link 
                 key={item.label}
@@ -251,6 +287,7 @@ export default function Header() {
               className="fixed inset-0 bg-black-pure/95 z-[60] backdrop-blur-md"
             />
             <motion.div 
+              id="mobile-menu-sidebar"
               initial={{ x: '-100%' }} 
               animate={{ x: 0 }} 
               exit={{ x: '-100%' }}

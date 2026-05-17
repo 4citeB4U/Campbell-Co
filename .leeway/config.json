@@ -1,33 +1,44 @@
 {
-  "version": "1.0.0",
+  "version": "1.2.0",
   "project": {
-    "name": "campbell-co-leeway-governed",
+    "name": "campbell-co-sovereign-os",
     "author": "Campbell & Co.",
-    "license": "PROPRIETARY"
+    "license": "PROPRIETARY",
+    "sovereigntyLevel": "HIGH"
   },
   "rootDir": ".",
+  "standards": {
+    "authority": "LeeWay-Standards",
+    "enforcement": "STRICT",
+    "requiredLayers": ["governance", "memory", "validation", "execution"]
+  },
   "agents": {
     "align": {
-      "dryRun": false
+      "dryRun": false,
+      "autoRepair": true
     },
     "audit": {
-      "outputDir": "reports"
+      "outputDir": "reports",
+      "failThreshold": 85
     },
     "health": {
-      "timeout": 5000
+      "timeout": 5000,
+      "continuous": true
     }
   },
   "compliance": {
     "minimumScore": 95,
-    "blockOnFail": true
+    "blockOnFail": true,
+    "receiptRequired": true
   },
   "policies": {
-    "NO_SECRETS_IN_CODE": { "enforced": true },
-    "HEADERS_REQUIRED": { "enforced": true },
-    "TAGS_REQUIRED": { "enforced": true },
-    "NO_CIRCULAR_DEPS": { "enforced": true },
-    "NAMING_CONVENTIONS": { "enforced": true },
-    "PLACEMENT_RULES": { "enforced": true }
+    "NO_SECRETS_IN_CODE": { "enforced": true, "severity": "CRITICAL" },
+    "HEADERS_REQUIRED": { "enforced": true, "severity": "HIGH" },
+    "TAGS_REQUIRED": { "enforced": true, "severity": "HIGH" },
+    "NO_CIRCULAR_DEPS": { "enforced": true, "severity": "MEDIUM" },
+    "NAMING_CONVENTIONS": { "enforced": true, "severity": "LOW" },
+    "PLACEMENT_RULES": { "enforced": true, "severity": "MEDIUM" },
+    "VERITAS_VALIDATION": { "enforced": true, "severity": "HIGH" }
   },
   "ignore": [
     "node_modules/**",
@@ -35,6 +46,7 @@
     "build/**",
     ".next/**",
     "coverage/**",
-    "*.min.js"
+    "*.min.js",
+    "public/assets/**"
   ]
 }

@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.HERO.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -22,14 +36,33 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { useSiteContent } from '../hooks/useSiteContent';
 import { publicAssetUrl } from '../lib/publicPath';
+import { useLeeWayID } from '../hooks/useLeeWayID';
 
 export default function Hero() {
+  useLeeWayID({
+    id: 'public.home.hero',
+    label: 'Homepage Hero',
+    tag: 'UI.PUBLIC.HOME.HERO',
+    region: 'PUBLIC',
+    ownerAgent: 'Aura',
+    authority: 'AdminOS',
+    tracePath: ['AdminOS', 'SiteContent', 'Published', 'CustomerSite', 'Hero'],
+    auditCategory: 'content.publish',
+    status: 'active',
+    hardCoded: false,
+  });
+
   const { content } = useSiteContent();
   const hero = content.home.hero;
   const usesVideo = hero.mediaType === 'video' && Boolean(hero.videoUrl);
 
   return (
-    <section className="relative h-screen min-h-[800px] flex overflow-hidden border-b border-gray-border">
+    <section 
+      className="relative h-screen min-h-[800px] flex overflow-hidden border-b border-gray-border"
+      data-leeway-id="public.home.hero"
+      data-leeway-tag="UI.PUBLIC.HOME.HERO"
+      data-owner-agent="Aura"
+    >
       {/* Left Content */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center px-12 md:px-24 bg-black-pure z-10">
         <motion.div

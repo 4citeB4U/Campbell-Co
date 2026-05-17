@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#1F51FF
+FLUO=#0096FF
+PASTEL=#A7C7E7
+
+ICON_ASCII:
+family=lucide
+glyph=database
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: CONTENT
 TAG: CONTENT.SRC.CONTENT.SITE_CONTENT.MAIN
 DESCRIPTION: No-code editable storefront content defaults and helpers
@@ -39,6 +53,14 @@ export type SiteContent = {
     mobileConciergeTitle: string;
     mobileConciergeBody: string;
     mobileConciergeCta: LinkTarget;
+    conciergeGreeting: string;
+  };
+  diamondGuide: {
+    title: string;
+    subtitle: string;
+    description: string;
+    qualityGuide: Array<{ label: string; sub: string; desc: string; icon: string }>;
+    stoneTypes: Array<{ name: string; desc: string; shop: string; icon: string }>;
   };
   home: {
     hero: {
@@ -137,9 +159,38 @@ export type SiteContent = {
       posts: Array<{ title: string; excerpt: string; path: string }>;
     };
   };
+  legal: {
+    privacy: { eyebrow: string; title: string; intro: string; sections: Array<{ title: string; body: string }> };
+    terms: { eyebrow: string; title: string; intro: string; sections: Array<{ title: string; body: string }> };
+  };
+  payments: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    examplePrice: number;
+    pathways: Array<{ eyebrow: string; title: string; body: string; bullets: string[] }>;
+    rolloutTitle: string;
+    rolloutBody: string;
+    rolloutPhases: string[];
+  };
+  checkout: {
+    detailsEyebrow: string;
+    detailsTitle: string;
+    paymentOptionsCaption: string;
+    confirmationEyebrow: string;
+    confirmationTitle: string;
+    confirmationBody: string;
+    confirmationCta: string;
+    securityBadgeTitle: string;
+    securityBadgeBody: string;
+    agreementText: string;
+  };
   theme: {
     primaryColor: string;
     headingFont: string;
+  };
+  layout: {
+    homepage: Array<{ id: string; enabled: boolean; order: number }>;
   };
 };
 
@@ -150,9 +201,31 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
   header: {
     benefits: ['Free Insured Shipping', 'Lifetime Warranty', 'Authenticity Guaranteed'],
     searchPlaceholder: 'Search premium diamonds, necklaces, rings...',
-    mobileConciergeTitle: 'Diamond Concierge',
-    mobileConciergeBody: 'Professionally verified pieces only. All stones are hand-inspected.',
-    mobileConciergeCta: { label: 'Book a Consultation', path: '/contact' },
+    mobileConciergeTitle: 'Concierge Avion',
+    mobileConciergeBody: 'Speak with our intelligent concierge for personalized artifact curation.',
+    mobileConciergeCta: {
+      label: 'Consult C&C',
+      path: '/contact'
+    },
+    conciergeGreeting: "Good afternoon. I am Concierge Avion, your guide to the House of Campbell. Whether you seek technical precision or the narrative behind our latest artifacts, I am here to assist."
+  },
+  diamondGuide: {
+    title: "DIAMOND & GEMSTONE GUIDE",
+    subtitle: "EXPLORE OUR PREMIUM STONES",
+    description: "Hand-selected for brilliance, fire, and exceptional quality. Every stone in our collection meets the most rigorous standards of the Campbell & Co. vault.",
+    qualityGuide: [
+      { label: 'CUT', sub: 'EXCELLENT', desc: 'Ideal proportions for maximum brilliance and fire.', icon: '/assets/campbell/jewelry/diamond-macro.png' },
+      { label: 'COLOR', sub: 'D - F', desc: 'Colorless. The highest grade for exceptional purity.', icon: '/assets/campbell/diamonds/color.png' },
+      { label: 'CLARITY', sub: 'VS1+', desc: 'Very Slightly Included. Premium clarity grade.', icon: '/assets/campbell/jewelry/loose-diamonds.png' },
+      { label: 'CARAT', sub: '1.00 CT+', desc: 'Weight refers to the size of the diamond.', icon: '/assets/campbell/diamonds/carat.png' },
+    ],
+    stoneTypes: [
+      { name: 'LAB GROWN DIAMONDS', desc: 'Ethical. Sustainable. Identical brilliance.', shop: 'SHOP LAB DIAMONDS', icon: '/assets/campbell/diamonds/emerald.png' },
+      { name: 'NATURAL DIAMONDS', desc: 'Timeless. Rare. Formed by nature.', shop: 'SHOP NATURAL DIAMONDS', icon: '/assets/campbell/diamonds/round.png' },
+      { name: 'VERIFIED DIAMONDS', desc: 'IGI / GIA / GCAL Certified. Maximum confidence.', shop: 'SHOP VERIFIED', icon: '/assets/campbell/jewelry/loose-diamonds.png' },
+      { name: 'UNVERIFIED DIAMONDS', desc: 'Beautiful quality. Better pricing.', shop: 'SHOP UNVERIFIED', icon: '/assets/campbell/diamonds/carat.png' },
+      { name: 'LOOSE DIAMONDS', desc: 'Hand-selected stones. Perfect for custom pieces.', shop: 'SHOP LOOSE DIAMONDS', icon: '/assets/campbell/jewelry/diamond-macro.png' },
+    ]
   },
   home: {
     hero: {
@@ -296,10 +369,116 @@ export const DEFAULT_SITE_CONTENT: SiteContent = {
       ],
     },
   },
+  legal: {
+    privacy: {
+      eyebrow: 'Privacy',
+      title: 'Privacy Policy',
+      intro: 'A plain-language overview of how Campbell & Co. handles browsing activity, inquiries, and customer information across the storefront and internal operating system.',
+      sections: [
+        {
+          title: 'Information We Collect',
+          body: 'Campbell & Co. may collect information you provide directly, including contact details, consultation requests, purchase information, and communications submitted through the site.',
+        },
+        {
+          title: 'How Information Is Used',
+          body: 'Information is used to respond to inquiries, support orders, improve the customer experience, manage operations, and maintain the performance and security of the application.',
+        },
+        {
+          title: 'Operational Services',
+          body: 'Portions of the application may rely on third-party infrastructure such as hosting, analytics, authentication, storage, and payment-related services needed to operate the platform responsibly.',
+        },
+        {
+          title: 'Customer Requests',
+          body: 'Customers may request clarification, updates, or removal of submitted information by contacting Campbell & Co. through the available concierge or support pathways.',
+        },
+      ]
+    },
+    terms: {
+      eyebrow: 'Terms',
+      title: 'Terms of Service',
+      intro: 'These terms describe the general expectations for using the Campbell & Co. storefront, content, and administrative services.',
+      sections: [
+        {
+          title: 'Use of the Site',
+          body: 'Visitors may browse the storefront and request services for lawful personal or business purposes. Misuse, unauthorized access attempts, or interference with the platform is prohibited.',
+        },
+        {
+          title: 'Product and Content Presentation',
+          body: 'Campbell & Co. aims to present product details, imagery, availability, and guidance accurately, but offerings, pricing, and availability may change without notice.',
+        },
+        {
+          title: 'Orders and Requests',
+          body: 'Submitting a request or initiating checkout does not guarantee final acceptance. Orders, consultations, and operational actions may require confirmation, review, or follow-up communication.',
+        },
+        {
+          title: 'Platform Governance',
+          body: 'The application is maintained under LeeWay Standards for structured governance, technical continuity, and operational control. Administrative access is restricted to authorized users only.',
+        },
+      ]
+    }
+  },
+  payments: {
+    eyebrow: 'Payments',
+    title: 'Flexible Ways To Acquire',
+    body: 'Campbell & Co. can present a premium payment experience that supports immediate card checkout, monthly installment options, reserve deposits, and Bitcoin-style settlement without making the customer guess how the process works.',
+    examplePrice: 4200,
+    pathways: [
+      {
+        eyebrow: 'Pay In Full',
+        title: 'Cards, Debit, and Wallet Checkout',
+        body: 'Campbell & Co. can be prepared to accept major credit cards, debit cards, and wallet-based checkout for immediate authorization and secure capture.',
+        bullets: ['Visa, Mastercard, Amex, and debit cards', 'Wallet-ready checkout such as Apple Pay and Google Pay', 'Fastest activation path for standard online payments'],
+      },
+      {
+        eyebrow: 'Pay Over Time',
+        title: 'Installments and Monthly Financing',
+        body: 'For clients who want flexibility, the storefront can present monthly installment options at checkout and approval-based financing for higher-ticket pieces.',
+        bullets: ['Clear disclosure language can live next to the product price and inside checkout'],
+      },
+      {
+        eyebrow: 'Digital Assets',
+        title: 'Bitcoin and Crypto Settlement',
+        body: 'The storefront can also offer Bitcoin and selected digital asset settlement through a dedicated crypto payment partner for clients who prefer alternative payment rails.',
+        bullets: ['Bitcoin-first presentation with room for additional approved assets', 'Manual or hosted payment link flow for private orders', 'Confirmation review before release or fulfillment'],
+      },
+    ],
+    rolloutTitle: 'Launch in layers, not all at once.',
+    rolloutBody: 'The cleanest rollout is usually cards and debit first, monthly installments second, reserve deposit flows third, and Bitcoin or crypto settlement after the core checkout is proven.',
+    rolloutPhases: [
+      'Phase 1: cards, debit, and wallet checkout',
+      'Phase 2: installment messaging on product pages and in checkout',
+      'Phase 3: private reserve deposit plans for higher-ticket orders',
+      'Phase 4: Bitcoin and selected crypto by hosted payment link or direct settlement partner',
+    ]
+  },
+  checkout: {
+    detailsEyebrow: 'Acquisition Portal',
+    detailsTitle: 'Review Details',
+    paymentOptionsCaption: 'Select Payment Route',
+    confirmationEyebrow: 'Transaction Verified',
+    confirmationTitle: 'Registry Confirmed',
+    confirmationBody: 'Your artifacts have been secured in our primary vault. A private acquisition officer will contact you within the hour to coordinate hand-delivery details.',
+    confirmationCta: 'Return to the House',
+    securityBadgeTitle: 'Encrypted Line Secured',
+    securityBadgeBody: 'This transaction is protected by the House of Campbell Multi-Sig security protocol. Your data is purged immediately following registry verification.',
+    agreementText: 'By authorizing this acquisition, you agree to the House of Campbell Charter, ensuring the legacy of these artifacts for a minimum of one generational cycle.',
+  },
   theme: {
     primaryColor: '#D6B46A',
     headingFont: 'Playfair Display',
   },
+  layout: {
+    homepage: [
+      { id: 'hero', enabled: true, order: 0 },
+      { id: 'collections', enabled: true, order: 1 },
+      { id: 'globalAcquisitions', enabled: true, order: 2 },
+      { id: 'promo', enabled: true, order: 3 },
+      { id: 'curatedSelection', enabled: true, order: 4 },
+      { id: 'verification', enabled: true, order: 5 },
+      { id: 'recentlyViewed', enabled: true, order: 6 },
+      { id: 'trustBar', enabled: true, order: 7 },
+    ]
+  }
 };
 
 function isObject(value: unknown): value is Record<string, unknown> {

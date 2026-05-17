@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.PRODUCT_DETAIL_PAGE.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -35,7 +49,8 @@ import {
   ArrowLeft,
   CheckCircle2
 } from 'lucide-react';
-import { MASTER_PRODUCTS } from '../constants';
+import { useProducts } from '../hooks/useProducts';
+import { Product } from '../types';
 import { useCart } from '../context/CartContext';
 import ProductViewer from './ProductViewer';
 import RecommendationEngine from './RecommendationEngine';
@@ -45,12 +60,14 @@ export default function ProductDetailPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const [product, setProduct] = useState(MASTER_PRODUCTS.find(p => p.slug === slug));
-  const [activeImage, setActiveImage] = useState(product?.image);
+  const { products, loading } = useProducts();
+  const [product, setProduct] = useState<Product | undefined>(undefined);
+  const [activeImage, setActiveImage] = useState<string | undefined>(undefined);
   const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
-    const found = MASTER_PRODUCTS.find(p => p.slug === slug);
+    if (loading) return;
+    const found = products.find(p => p.slug === slug);
     if (found) {
       setProduct(found);
       setActiveImage(found.image);
@@ -65,7 +82,7 @@ export default function ProductDetailPage() {
     } else {
       navigate('/shop');
     }
-  }, [slug, navigate]);
+  }, [slug, navigate, products, loading]);
 
   useEffect(() => {
     if (!product) return undefined;

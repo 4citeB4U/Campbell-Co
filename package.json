@@ -12,8 +12,10 @@
     "preview": "node ./node_modules/vite/bin/vite.js preview",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
     "lint": "node ./node_modules/typescript/bin/tsc --noEmit",
-    "leeway:headers": "node ./.leeway/scripts/auto-enforce-file-governance.mjs --root . --apply",
-    "leeway:compliance": "node ./.leeway/scripts/compliance-check.mjs ."
+    "leeway:audit": "node ./.leeway/scripts/compliance-check.mjs .",
+    "leeway:align": "node ./.leeway/scripts/auto-enforce-file-governance.mjs --root . --apply",
+    "leeway:doctor": "node ./.leeway/scripts/compliance-check.mjs .",
+    "leeway:headers": "npm run leeway:align"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",

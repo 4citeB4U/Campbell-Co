@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.AVO_CONCIERGE.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -23,15 +37,30 @@ import { useNavigate, useLocation, matchPath } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageSquare, X, Send, Loader2, Sparkles, ShieldCheck, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useProductExperience } from '../context/ProductExperienceContext';
+import { useSiteContent } from '../hooks/useSiteContent';
 import { getConciergeResponse } from '../services/conciergeService';
-import { MASTER_PRODUCTS } from '../constants';
 
 interface Message {
   role: 'assistant' | 'user';
   content: string;
 }
 
+import { useLeeWayID } from '../hooks/useLeeWayID';
+
 export default function AvoConcierge() {
+  useLeeWayID({
+    id: 'public.concierge',
+    label: 'Avion Concierge AI',
+    tag: 'UI.PUBLIC.CONCIERGE',
+    region: 'PUBLIC',
+    ownerAgent: 'Lee Prime',
+    authority: 'AdminOS',
+    tracePath: ['AdminOS', 'SiteContent', 'Published', 'CustomerSite', 'AvoConcierge'],
+    auditCategory: 'agent.interaction',
+    status: 'active',
+    hardCoded: false,
+  });
+
   const navigate = useNavigate();
   const location = useLocation();
   const { products } = useProductExperience();
@@ -39,16 +68,17 @@ export default function AvoConcierge() {
   const selectedProduct = useMemo(() => {
     const match = matchPath({ path: "/product/:slug" }, location.pathname);
     if (match?.params.slug) {
-      return MASTER_PRODUCTS.find(p => p.slug === match.params.slug);
+      return products.find(p => p.slug === match.params.slug);
     }
     return null;
-  }, [location.pathname]);
+  }, [location.pathname, products]);
 
+  const { content } = useSiteContent();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     { 
       role: 'assistant', 
-      content: "Good afternoon. I am Concierge Avo, your concierge to the House of Campbell. Whether you seek technical precision or the narrative behind our latest artifacts, I am here to guide you." 
+      content: content.header.conciergeGreeting 
     }
   ]);
   const [input, setInput] = useState('');
@@ -122,7 +152,7 @@ export default function AvoConcierge() {
             <MessageSquare size={24} strokeWidth={1.5} />
             <div className="absolute -top-1 -right-1 w-4 h-4 bg-white rounded-full animate-ping" />
             <span className="absolute right-full mr-6 py-2 px-4 bg-black-pure border border-gold/20 text-[9px] uppercase tracking-[0.4em] text-gold font-black opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-               Consult Avo
+               Consult Avion
             </span>
           </motion.button>
         )}
@@ -144,7 +174,7 @@ export default function AvoConcierge() {
                      <span className="text-gold font-serif text-xl">C</span>
                   </div>
                   <div className="flex flex-col">
-                     <span className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Concierge Avo</span>
+                     <span className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Concierge Avion</span>
                      <span className="text-[8px] uppercase tracking-[0.3em] text-white/30 font-black flex items-center gap-2">
                         Online <div className="w-1 h-1 bg-green-500 rounded-full" />
                      </span>
@@ -190,7 +220,7 @@ export default function AvoConcierge() {
                 <div className="flex justify-start">
                   <div className="flex items-center gap-4 bg-white/5 px-6 py-4 rounded-sm border border-gold/5">
                     <Loader2 size={12} className="text-gold animate-spin" />
-                    <span className="text-[9px] uppercase tracking-[0.5em] text-white/30 font-black">Concierge Avo is thinking...</span>
+                    <span className="text-[9px] uppercase tracking-[0.5em] text-white/30 font-black">Concierge Avion is thinking...</span>
                   </div>
                 </div>
               )}

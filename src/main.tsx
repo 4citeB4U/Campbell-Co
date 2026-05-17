@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#39FF14
+FLUO=#0DFF94
+PASTEL=#C7FFD8
+
+ICON_ASCII:
+family=lucide
+glyph=cpu
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: CORE
 TAG: CORE.CORE.SRC.MAIN.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -22,6 +36,10 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
+import { leewayRuntime } from './core/LeeWayRuntime';
+
+// Initialize LeeWay Sovereign Runtime
+leewayRuntime.registerComponent('MAIN_ENTRY');
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

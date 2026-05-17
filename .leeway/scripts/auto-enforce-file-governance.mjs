@@ -3,6 +3,16 @@ LEEWAY HEADER — DO NOT REMOVE
 
 REGION: CORE
 TAG: CORE.MODULE.AUTO_ENFORCE_FILE_GOVERNANCE.MAIN
+
+COLOR_ONION_HEX:
+NEON=#39FF14
+FLUO=#0DFF94
+PASTEL=#C7FFD8
+
+ICON_ASCII:
+family=lucide
+glyph=cpu
+
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
 AUTHORITY: LeeWay-Standards
 DISCOVERY_PIPELINE: Voice → Intent → Location → Vertical → Ranking → Render
@@ -12,8 +22,13 @@ WHAT = auto-enforce-file-governance — governed module
 WHY = Enforce LeeWay file-level header, tag, region, and discovery pipeline requirements before code enters runtime
 WHO = Leeway Innovations / LeeWay Standards Enforcement Engine
 WHERE = scripts/auto-enforce-file-governance.mjs
-WHEN = 2026-04-18
+WHEN = 2026-05-16
 HOW = Auto-enforced header; update manually with full 5WH detail
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
 
 CHAIN: Standards → Integrated → Runtime → Projections
 LICENSE: PROPRIETARY
@@ -30,6 +45,13 @@ const standardsRoot = path.resolve(__dirname, '..');
 const SUPPORTED_EXTENSIONS = new Set(['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs']);
 const SKIP_SEGMENTS = new Set(['node_modules', '.git', 'dist', 'build', 'coverage', '.next', '__quarantine__']);
 const DISCOVERY_PIPELINE = 'Voice → Intent → Location → Vertical → Ranking → Render';
+
+const COLOR_ONION = {
+  CORE: { NEON: '#39FF14', FLUO: '#0DFF94', PASTEL: '#C7FFD8' },
+  UI: { NEON: '#FF3131', FLUO: '#FF5757', PASTEL: '#FF9191' },
+  DATA: { NEON: '#1F51FF', FLUO: '#0096FF', PASTEL: '#A7C7E7' },
+  UTIL: { NEON: '#FFD700', FLUO: '#FFEA00', PASTEL: '#FFF9C4' },
+};
 
 function parseArgs(argv) {
   const options = {
@@ -67,13 +89,17 @@ function inferRegion(relativePath) {
   const normalized = relativePath.replace(/\\/g, '/').toLowerCase();
   if (normalized.includes('/components/')) return 'UI';
   if (normalized.includes('/pages/')) return 'UI';
+  if (normalized.includes('/apps/')) return 'UI';
   if (normalized.includes('/contracts/')) return 'CORE';
   if (normalized.includes('/governance/')) return 'CORE';
   if (normalized.includes('/engine/')) return 'CORE';
   if (normalized.includes('/core/')) return 'CORE';
+  if (normalized.includes('/hooks/')) return 'CORE';
   if (normalized.includes('/scripts/')) return 'CORE';
   if (normalized.includes('/utils/')) return 'UTIL';
+  if (normalized.includes('/lib/')) return 'UTIL';
   if (normalized.includes('/data/')) return 'DATA';
+  if (normalized.includes('/content/')) return 'DATA';
   if (normalized.includes('/firebase')) return 'DATA';
   return 'CORE';
 }
@@ -97,10 +123,22 @@ function inferTag(relativePath) {
   return `${region}.${tail.join('.')}.MAIN`;
 }
 
+function inferIcon(region) {
+  const icons = {
+    UI: 'layout',
+    CORE: 'cpu',
+    DATA: 'database',
+    UTIL: 'wrench',
+  };
+  return icons[region] || 'file';
+}
+
 function buildHeader(relativePath) {
   const region = inferRegion(relativePath);
   const tag = inferTag(relativePath);
+  const icon = inferIcon(region);
   const fileName = path.basename(relativePath);
+  const colors = COLOR_ONION[region] || COLOR_ONION.CORE;
 
   return [
     '/*',
@@ -108,6 +146,16 @@ function buildHeader(relativePath) {
     '',
     `REGION: ${region}`,
     `TAG: ${tag}`,
+    '',
+    'COLOR_ONION_HEX:',
+    `NEON=${colors.NEON}`,
+    `FLUO=${colors.FLUO}`,
+    `PASTEL=${colors.PASTEL}`,
+    '',
+    'ICON_ASCII:',
+    'family=lucide',
+    `glyph=${icon}`,
+    '',
     'DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine',
     'AUTHORITY: LeeWay-Standards',
     `DISCOVERY_PIPELINE: ${DISCOVERY_PIPELINE}`,
@@ -117,8 +165,13 @@ function buildHeader(relativePath) {
     'WHY = Enforce LeeWay architectural standards in this file',
     'WHO = Leeway Innovations / LeeWay Standards Enforcement Engine',
     `WHERE = ${relativePath.replace(/\\/g, '/')}`,
-    'WHEN = 2026-04-18',
+    'WHEN = 2026-05-16',
     'HOW = Auto-enforced header; update manually with full 5WH detail',
+    '',
+    'AGENTS:',
+    'ASSESS',
+    'ALIGN',
+    'AUDIT',
     '',
     'CHAIN: Standards → Integrated → Runtime → Projections',
     'LICENSE: PROPRIETARY',
@@ -132,22 +185,37 @@ function hasRequiredMarkers(content) {
     content.includes('LEEWAY HEADER') &&
     content.includes('REGION:') &&
     content.includes('TAG:') &&
-    content.includes('DISCOVERY_PIPELINE:')
+    content.includes('COLOR_ONION_HEX:') &&
+    content.includes('ICON_ASCII:') &&
+    content.includes('DISCOVERY_PIPELINE:') &&
+    content.includes('AGENTS:')
   );
 }
 
 function patchExistingHeader(content, relativePath) {
   const lines = content.split(/\r?\n/);
+  const region = inferRegion(relativePath);
+  const tag = inferTag(relativePath);
+  const icon = inferIcon(region);
+  const colors = COLOR_ONION[region] || COLOR_ONION.CORE;
+
   const patch = [];
 
-  if (!content.includes('REGION:')) {
-    patch.push(`REGION: ${inferRegion(relativePath)}`);
+  if (!content.includes('REGION:')) patch.push(`REGION: ${region}`);
+  if (!content.includes('TAG:')) patch.push(`TAG: ${tag}`);
+  
+  if (!content.includes('COLOR_ONION_HEX:')) {
+    patch.push('', 'COLOR_ONION_HEX:', `NEON=${colors.NEON}`, `FLUO=${colors.FLUO}`, `PASTEL=${colors.PASTEL}`);
   }
-  if (!content.includes('TAG:')) {
-    patch.push(`TAG: ${inferTag(relativePath)}`);
+  
+  if (!content.includes('ICON_ASCII:')) {
+    patch.push('', 'ICON_ASCII:', 'family=lucide', `glyph=${icon}`);
   }
-  if (!content.includes('DISCOVERY_PIPELINE:')) {
-    patch.push(`DISCOVERY_PIPELINE: ${DISCOVERY_PIPELINE}`);
+
+  if (!content.includes('DISCOVERY_PIPELINE:')) patch.push(`DISCOVERY_PIPELINE: ${DISCOVERY_PIPELINE}`);
+  
+  if (!content.includes('AGENTS:')) {
+    patch.push('', 'AGENTS:', 'ASSESS', 'ALIGN', 'AUDIT');
   }
 
   if (patch.length === 0) {
@@ -160,7 +228,7 @@ function patchExistingHeader(content, relativePath) {
   }
 
   const insertIndex = Math.max(headerIndex + 1, 1);
-  lines.splice(insertIndex, 0, '', ...patch);
+  lines.splice(insertIndex, 0, ...patch);
   return `${lines.join('\n')}${content.endsWith('\n') ? '' : '\n'}`;
 }
 
@@ -175,14 +243,9 @@ async function walk(targetPath, files) {
 
   const entries = await fs.readdir(targetPath, { withFileTypes: true });
   for (const entry of entries) {
-    if (isPackagedMirror(targetPath, entry.name)) continue;
     if (SKIP_SEGMENTS.has(entry.name)) continue;
     await walk(path.join(targetPath, entry.name), files);
   }
-}
-
-function isPackagedMirror(parentDir, entryName) {
-  return path.resolve(parentDir) === standardsRoot && entryName === 'LeeWay-Standards';
 }
 
 async function main() {

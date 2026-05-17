@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#39FF14
+FLUO=#0DFF94
+PASTEL=#C7FFD8
+
+ICON_ASCII:
+family=lucide
+glyph=cpu
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: CORE
 TAG: CORE.CORE.CORE.VITE_CONFIG.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -74,8 +88,8 @@ export default defineConfig(() => {
     build: {
       rollupOptions: {
         input: {
-          storefront: path.resolve(__dirname, 'index.html'),
-          admin: path.resolve(__dirname, 'admin.html'),
+          storefront: 'index.html',
+          admin: 'admin.html',
         },
       },
     },

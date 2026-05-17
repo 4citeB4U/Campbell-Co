@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.FOOTER.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -22,13 +36,33 @@ import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Twitter, Youtube, Send, Truck, Award, ShieldCheck, CreditCard, RotateCcw } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
 import { publicUrl } from '../lib/publicPath';
+import { useLeeWayID } from '../hooks/useLeeWayID';
 
 export default function Footer() {
+  useLeeWayID({
+    id: 'public.footer',
+    label: 'Global Footer',
+    tag: 'UI.PUBLIC.FOOTER',
+    region: 'PUBLIC',
+    ownerAgent: 'Aura',
+    authority: 'AdminOS',
+    tracePath: ['AdminOS', 'SiteContent', 'Published', 'CustomerSite', 'Footer'],
+    auditCategory: 'content.publish',
+    status: 'active',
+    hardCoded: false,
+  });
+
   const { content } = useSiteContent();
   const badgeIcons = [Truck, Award, ShieldCheck, CreditCard, RotateCcw];
 
   return (
-    <footer className="bg-black-pure pt-24 border-t border-white/5">
+    <footer 
+      id="global-footer" 
+      className="bg-black-pure pt-24 border-t border-white/5"
+      data-leeway-id="public.footer"
+      data-leeway-tag="UI.PUBLIC.FOOTER"
+      data-owner-agent="Aura"
+    >
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 pb-16 border-b border-white/5 mb-16">
           {content.footer.badges.map((badge, index) => {

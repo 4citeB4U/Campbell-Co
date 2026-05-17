@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.VERIFICATION_SECTION.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -23,13 +37,32 @@ import { motion } from 'motion/react';
 import { Check, Info } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
 import { publicAssetUrl } from '../lib/publicPath';
+import { useLeeWayID } from '../hooks/useLeeWayID';
 
 export default function VerificationSection() {
+  useLeeWayID({
+    id: 'public.home.verification',
+    label: 'Verification & Transparency',
+    tag: 'UI.PUBLIC.HOME.VERIFICATION',
+    region: 'PUBLIC',
+    ownerAgent: 'Aura',
+    authority: 'AdminOS',
+    tracePath: ['AdminOS', 'SiteContent', 'Published', 'CustomerSite', 'VerificationSection'],
+    auditCategory: 'content.publish',
+    status: 'active',
+    hardCoded: false,
+  });
+
   const { content } = useSiteContent();
   const verification = content.verification;
 
   return (
-    <section className="py-32 bg-black-pure overflow-hidden">
+    <section 
+      className="py-32 bg-black-pure overflow-hidden"
+      data-leeway-id="public.home.verification"
+      data-leeway-tag="UI.PUBLIC.HOME.VERIFICATION"
+      data-owner-agent="Aura"
+    >
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-20">
           <span className="text-gold uppercase tracking-[0.4em] text-[10px] font-medium block mb-4">

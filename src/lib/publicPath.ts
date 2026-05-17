@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FFD700
+FLUO=#FFEA00
+PASTEL=#FFF9C4
+
+ICON_ASCII:
+family=lucide
+glyph=wrench
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: CORE
 TAG: CORE.SRC.LIB.PUBLIC_PATH.MAIN
 DESCRIPTION: GitHub Pages safe URL helpers for public assets and HTML entries

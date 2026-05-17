@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#39FF14
+FLUO=#0DFF94
+PASTEL=#C7FFD8
+
+ICON_ASCII:
+family=lucide
+glyph=cpu
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: CORE
 TAG: CORE.CORE.SRC.TYPES.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -76,6 +90,11 @@ export interface Product {
   isBestSeller?: boolean;
   isNewArrival?: boolean;
   isPremium?: boolean;
+  featured?: boolean;
+  seoTitle?: string;
+  seoDescription?: string;
+  imageAlt?: string;
+  leewayMetadata?: any;
 }
 
 export interface Order {
@@ -143,8 +162,17 @@ export interface Vendor {
 export interface AIAgent {
   id: string;
   name: string;
+  title?: string;
+  department?: string;
+  family: 'core' | 'forge' | 'memory' | 'guardian' | 'routing' | 'media' | 'pipeline' | 'security' | 'trust' | 'host' | 'ui' | 'api' | 'quality' | 'style' | 'visual';
   purpose: string;
   status: 'active' | 'idle' | 'working' | 'alert';
+  authorityLevel?: string;
+  sourceAgent?: string;
+  lineage?: string;
+  capabilities: string[];
+  responsibilities?: string[];
+  operatingMode?: 'advisory' | 'connected' | 'standby';
   tasks: {
     id: string;
     title: string;
@@ -182,4 +210,25 @@ export interface ProcurementData {
     reason: string;
     impact: string;
   }>;
+}
+
+export type RuntimeAuthorityMode = 
+  | 'PRODUCTION_AUTHORITY'
+  | 'DEVELOPMENT_BOOTSTRAP'
+  | 'STATIC_BOOTSTRAP_CONTENT'
+  | 'CONFIGURATION_BLOCKED';
+
+export interface RuntimeModeMetadata {
+  id: 'runtime.authority.production' | 'runtime.authority.development-bootstrap' | 'runtime.authority.static-bootstrap-content' | 'runtime.authority.configuration-blocked';
+  label: string;
+  tag: string;
+  ownerAgent: 'Lee Prime' | 'Nova' | 'Atlas' | 'Shield' | 'Aura';
+  authority: string;
+  riskLevel: 'Low' | 'Medium' | 'High' | 'None' | 'Very Low';
+  allowedEnvironment: 'production' | 'development' | 'all' | 'none';
+  publishPermission: boolean;
+  persistenceSource: 'Firestore' | 'LocalStorage' | 'Memory' | 'None';
+  tracePath: string[];
+  auditCategory: string;
+  missingConfigDetail?: string;
 }

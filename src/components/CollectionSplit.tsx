@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.COLLECTION_SPLIT.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -23,13 +37,32 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSiteContent } from '../hooks/useSiteContent';
 import { publicAssetUrl } from '../lib/publicPath';
+import { useLeeWayID } from '../hooks/useLeeWayID';
 
 export default function CollectionSplit() {
+  useLeeWayID({
+    id: 'public.home.collections',
+    label: 'Homepage Collections',
+    tag: 'UI.PUBLIC.HOME.COLLECTIONS',
+    region: 'PUBLIC',
+    ownerAgent: 'Aura',
+    authority: 'AdminOS',
+    tracePath: ['AdminOS', 'SiteContent', 'Published', 'CustomerSite', 'Collections'],
+    auditCategory: 'content.publish',
+    status: 'active',
+    hardCoded: false,
+  });
+
   const { content } = useSiteContent();
   const { women, men } = content.home.collections;
 
   return (
-    <section className="bg-black-pure border-y border-gold/10">
+    <section 
+      className="bg-black-pure border-y border-gold/10"
+      data-leeway-id="public.home.collections"
+      data-leeway-tag="UI.PUBLIC.HOME.COLLECTIONS"
+      data-owner-agent="Aura"
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 h-[800px]">
         {/* WOMEN'S COLLECTION */}
         <div className="relative group overflow-hidden border-r border-gold/20">

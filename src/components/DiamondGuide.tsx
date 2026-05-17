@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.DIAMOND_GUIDE.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -22,7 +36,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Award, ShieldCheck, Diamond, Sparkles, Filter, Search } from 'lucide-react';
+import { useSiteContent } from '../hooks/useSiteContent';
 import { publicAssetUrl } from '../lib/publicPath';
+import { useLeeWayID } from '../hooks/useLeeWayID';
 
 const SHAPES = [
   { name: 'ROUND', desc: 'Most popular', icon: '/assets/campbell/diamonds/round.png' },
@@ -37,37 +53,42 @@ const SHAPES = [
   { name: 'HEART', desc: 'Romantic shape', icon: '/assets/campbell/diamonds/round.png' },
 ];
 
-const QUALITY_GUIDE = [
-  { label: 'CUT', sub: 'EXCELLENT', icon: '/assets/campbell/jewelry/diamond-macro.png', desc: 'Ideal proportions for maximum brilliance and fire.' },
-  { label: 'COLOR', sub: 'D - F', icon: '/assets/campbell/diamonds/color.png', desc: 'Colorless. The highest grade for exceptional purity.' },
-  { label: 'CLARITY', sub: 'VS1+', icon: '/assets/campbell/jewelry/loose-diamonds.png', desc: 'Very Slightly Included. Premium clarity grade.' },
-  { label: 'CARAT', sub: '1.00 CT+', icon: '/assets/campbell/diamonds/carat.png', desc: 'Weight refers to the size of the diamond.' },
-];
-
-const STONE_TYPES = [
-  { name: 'LAB GROWN DIAMONDS', desc: 'Ethical. Sustainable. Identical brilliance.', shop: 'SHOP LAB DIAMONDS', icon: '/assets/campbell/diamonds/emerald.png' },
-  { name: 'NATURAL DIAMONDS', desc: 'Timeless. Rare. Formed by nature.', shop: 'SHOP NATURAL DIAMONDS', icon: '/assets/campbell/diamonds/round.png' },
-  { name: 'VERIFIED DIAMONDS', desc: 'IGI / GIA / GCAL Certified. Maximum confidence.', shop: 'SHOP VERIFIED', icon: '/assets/campbell/jewelry/loose-diamonds.png' },
-  { name: 'UNVERIFIED DIAMONDS', desc: 'Beautiful quality. Better pricing.', shop: 'SHOP UNVERIFIED', icon: '/assets/campbell/diamonds/carat.png' },
-  { name: 'LOOSE DIAMONDS', desc: 'Hand-selected stones. Perfect for custom pieces.', shop: 'SHOP LOOSE DIAMONDS', icon: '/assets/campbell/jewelry/diamond-macro.png' },
-];
-
 export default function DiamondGuide() {
+  useLeeWayID({
+    id: 'public.home.diamondGuide',
+    label: 'Diamond Guide',
+    tag: 'UI.PUBLIC.HOME.DIAMOND_GUIDE',
+    region: 'PUBLIC',
+    ownerAgent: 'Aura',
+    authority: 'AdminOS',
+    tracePath: ['AdminOS', 'SiteContent', 'Published', 'CustomerSite', 'DiamondGuide'],
+    auditCategory: 'content.publish',
+    status: 'active',
+    hardCoded: false,
+  });
+
+  const { content } = useSiteContent();
+  const guide = content.diamondGuide;
   const [activeTab, setActiveTab] = React.useState('DIAMONDS');
 
   return (
-    <div className="bg-black-pure text-white min-h-screen font-sans">
+    <div 
+      className="bg-black-pure text-white min-h-screen font-sans"
+      data-leeway-id="public.home.diamondGuide"
+      data-leeway-tag="UI.PUBLIC.HOME.DIAMOND_GUIDE"
+      data-owner-agent="Aura"
+    >
       {/* HEADER SECTION */}
       <header className="pt-24 pb-8 px-6 lg:px-12">
         <div className="max-w-[1700px] mx-auto space-y-8">
           <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-serif tracking-[0.05em] uppercase text-white">DIAMOND & GEMSTONE GUIDE</h1>
-            <p className="text-[11px] uppercase tracking-[0.4em] text-gold font-bold">EXPLORE OUR PREMIUM STONES</p>
+            <h1 className="text-4xl md:text-5xl font-serif tracking-[0.05em] uppercase text-white">{guide.title}</h1>
+            <p className="text-[11px] uppercase tracking-[0.4em] text-gold font-bold">{guide.subtitle}</p>
           </div>
           
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b border-white/10 pb-4">
             <p className="text-[10px] text-white/40 uppercase tracking-widest leading-relaxed max-w-xl">
-              Hand-selected for brilliance, fire, and exceptional quality. Every stone in our collection meets the most rigorous standards of the Campbell & Co. vault.
+              {guide.description}
             </p>
             
             <nav className="flex gap-10">
@@ -185,7 +206,7 @@ export default function DiamondGuide() {
           <section className="bg-[#050505] p-12 border border-white/10 space-y-12">
             <h2 className="text-[12px] uppercase tracking-[0.6em] text-gold font-black text-center">DIAMOND QUALITY GUIDE</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {QUALITY_GUIDE.map((item) => (
+              {guide.qualityGuide.map((item) => (
                 <div key={item.label} className="space-y-6 text-center group">
                   <div className="space-y-2">
                     <span className="text-[10px] uppercase tracking-[0.4em] text-gold font-black">{item.label}</span>
@@ -204,7 +225,7 @@ export default function DiamondGuide() {
           <section className="space-y-10">
             <h2 className="text-[12px] uppercase tracking-[0.6em] text-gold font-black text-center uppercase">AVAILABLE STONE TYPES</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-              {STONE_TYPES.map((stone) => (
+              {guide.stoneTypes.map((stone) => (
                 <div key={stone.name} className="bg-[#0a0a0a] border border-white/5 p-8 flex flex-col space-y-8 group hover:border-gold transition-all">
                   <div className="aspect-video overflow-hidden border border-white/10">
                     <img src={publicAssetUrl(stone.icon)} className="w-full h-full object-cover grayscale opacity-40 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" alt="" />

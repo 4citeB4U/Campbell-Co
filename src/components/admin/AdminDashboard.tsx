@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.COMPONENTS.ADMIN.ADMIN_DASHBOARD.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -54,7 +68,13 @@ export function AdminDashboard({ orders, members, products, analytics }: Dashboa
   ];
 
   return (
-    <div className="space-y-10 pb-20">
+    <div
+      className="space-y-10 pb-20"
+      data-leeway-id="admin.dashboard.main"
+      data-leeway-screen-id="ADMIN_DASHBOARD"
+      data-leeway-workflow-id="workflow.onboarding.first_launch"
+      data-leeway-owner-agent="agent-lee-prime"
+    >
       {/* Top Header Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, idx) => (

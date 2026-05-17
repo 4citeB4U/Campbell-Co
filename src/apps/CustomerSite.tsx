@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: CORE
 TAG: CORE.SRC.APPS.CUSTOMER_SITE.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -46,7 +60,7 @@ const AboutPage = () => {
   const page = content.pages.about;
 
   return (
-    <section className="pt-40 pb-24 px-6 lg:px-20 text-white">
+    <section id="about-page-section" className="pt-40 pb-24 px-6 lg:px-20 text-white">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <div className="space-y-8">
           <span className="text-[10px] uppercase tracking-[0.7em] text-gold font-black">{page.eyebrow}</span>
@@ -69,7 +83,7 @@ const FAQPage = () => {
   const page = content.pages.faq;
 
   return (
-    <section className="pt-40 pb-24 px-6 lg:px-20 text-white">
+    <section id="faq-page-section" className="pt-40 pb-24 px-6 lg:px-20 text-white">
       <div className="max-w-5xl mx-auto space-y-14">
         <div className="space-y-6 text-center">
           <span className="text-[10px] uppercase tracking-[0.7em] text-gold font-black">{page.eyebrow}</span>
@@ -94,7 +108,7 @@ const ContactPage = () => {
   const page = content.pages.contact;
 
   return (
-    <section className="pt-40 pb-24 px-6 lg:px-20 text-white">
+    <section id="contact-page-section" className="pt-40 pb-24 px-6 lg:px-20 text-white">
       <div className="max-w-4xl mx-auto text-center space-y-10">
         <span className="text-[10px] uppercase tracking-[0.7em] text-gold font-black">{page.eyebrow}</span>
         <h1 className="text-5xl lg:text-7xl font-serif uppercase tracking-widest leading-tight">{page.title}</h1>
@@ -113,7 +127,7 @@ const JournalPage = () => {
   const page = content.pages.journal;
 
   return (
-    <section className="pt-40 pb-24 px-6 lg:px-20 text-white">
+    <section id="journal-page-section" className="pt-40 pb-24 px-6 lg:px-20 text-white">
       <div className="max-w-7xl mx-auto space-y-14">
         <div className="space-y-6">
           <span className="text-[10px] uppercase tracking-[0.7em] text-gold font-black">{page.eyebrow}</span>
@@ -135,41 +149,23 @@ const JournalPage = () => {
 };
 
 const PaymentOptionsPage = () => {
-  const examplePrice = 4200;
+  const { content } = useSiteContent();
+  const page = content.payments;
+  const examplePrice = page.examplePrice;
   const deposit = Math.ceil(examplePrice * 0.2);
   const sixMonth = Math.ceil((examplePrice - deposit) / 6);
   const twelveMonth = Math.ceil((examplePrice * 0.88) / 12);
-
-  const pathways = [
-    {
-      eyebrow: 'Pay In Full',
-      title: 'Cards, Debit, and Wallet Checkout',
-      body: 'Campbell & Co. can be prepared to accept major credit cards, debit cards, and wallet-based checkout for immediate authorization and secure capture.',
-      bullets: ['Visa, Mastercard, Amex, and debit cards', 'Wallet-ready checkout such as Apple Pay and Google Pay', 'Fastest activation path for standard online payments'],
-    },
-    {
-      eyebrow: 'Pay Over Time',
-      title: 'Installments and Monthly Financing',
-      body: 'For clients who want flexibility, the storefront can present monthly installment options at checkout and approval-based financing for higher-ticket pieces.',
-      bullets: [`Estimated 12-month example: from $${twelveMonth.toLocaleString()} per month on a $${examplePrice.toLocaleString()} piece`, `Reserve-style plan example: $${deposit.toLocaleString()} down, then about $${sixMonth.toLocaleString()} per month for six months`, 'Clear disclosure language can live next to the product price and inside checkout'],
-    },
-    {
-      eyebrow: 'Digital Assets',
-      title: 'Bitcoin and Crypto Settlement',
-      body: 'The storefront can also offer Bitcoin and selected digital asset settlement through a dedicated crypto payment partner for clients who prefer alternative payment rails.',
-      bullets: ['Bitcoin-first presentation with room for additional approved assets', 'Manual or hosted payment link flow for private orders', 'Confirmation review before release or fulfillment'],
-    },
-  ];
+  const pathways = page.pathways;
 
   return (
-    <section className="pt-40 pb-24 px-6 lg:px-20 text-white">
+    <section id="payments-page-section" className="pt-40 pb-24 px-6 lg:px-20 text-white">
       <div className="max-w-7xl mx-auto space-y-16">
         <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.9fr] gap-10 items-start">
           <div className="space-y-6">
-            <span className="text-[10px] uppercase tracking-[0.7em] text-gold font-black">Payments</span>
-            <h1 className="text-5xl lg:text-7xl font-serif uppercase tracking-widest leading-tight">Flexible Ways To Acquire</h1>
+            <span className="text-[10px] uppercase tracking-[0.7em] text-gold font-black">{page.eyebrow}</span>
+            <h1 className="text-5xl lg:text-7xl font-serif uppercase tracking-widest leading-tight">{page.title}</h1>
             <p className="text-white/50 text-sm uppercase tracking-[0.25em] leading-loose max-w-4xl">
-              Campbell & Co. can present a premium payment experience that supports immediate card checkout, monthly installment options, reserve deposits, and Bitcoin-style settlement without making the customer guess how the process works.
+              {page.body}
             </p>
           </div>
           <div className="border border-gold/10 bg-gold/5 p-8 space-y-6">
@@ -218,18 +214,13 @@ const PaymentOptionsPage = () => {
         <div className="border border-gold/10 bg-[#050505] p-8 lg:p-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div className="space-y-4">
             <p className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Recommended Rollout</p>
-            <h2 className="text-3xl lg:text-4xl font-serif uppercase tracking-[0.15em]">Launch in layers, not all at once.</h2>
+            <h2 className="text-3xl lg:text-4xl font-serif uppercase tracking-[0.15em]">{page.rolloutTitle}</h2>
             <p className="text-white/50 text-sm uppercase tracking-[0.2em] leading-loose">
-              The cleanest rollout is usually cards and debit first, monthly installments second, reserve deposit flows third, and Bitcoin or crypto settlement after the core checkout is proven.
+              {page.rolloutBody}
             </p>
           </div>
           <div className="space-y-3">
-            {[
-              'Phase 1: cards, debit, and wallet checkout',
-              'Phase 2: installment messaging on product pages and in checkout',
-              'Phase 3: private reserve deposit plans for higher-ticket orders',
-              'Phase 4: Bitcoin and selected crypto by hosted payment link or direct settlement partner',
-            ].map((item) => (
+            {page.rolloutPhases.map((item) => (
               <div key={item} className="border border-white/10 px-4 py-4 text-[9px] uppercase tracking-[0.2em] text-white/55">
                 {item}
               </div>
@@ -253,7 +244,7 @@ const LegalPage = ({
   sections: Array<{ title: string; body: string }>;
 }) => {
   return (
-    <section className="pt-40 pb-24 px-6 lg:px-20 text-white">
+    <section id="legal-page-section" className="pt-40 pb-24 px-6 lg:px-20 text-white">
       <div className="max-w-5xl mx-auto space-y-14">
         <div className="space-y-6 text-center">
           <span className="text-[10px] uppercase tracking-[0.7em] text-gold font-black">{eyebrow}</span>
@@ -273,57 +264,31 @@ const LegalPage = ({
   );
 };
 
-const PrivacyPage = () => (
-  <LegalPage
-    eyebrow="Privacy"
-    title="Privacy Policy"
-    intro="A plain-language overview of how Campbell & Co. handles browsing activity, inquiries, and customer information across the storefront and internal operating system."
-    sections={[
-      {
-        title: 'Information We Collect',
-        body: 'Campbell & Co. may collect information you provide directly, including contact details, consultation requests, purchase information, and communications submitted through the site.',
-      },
-      {
-        title: 'How Information Is Used',
-        body: 'Information is used to respond to inquiries, support orders, improve the customer experience, manage operations, and maintain the performance and security of the application.',
-      },
-      {
-        title: 'Operational Services',
-        body: 'Portions of the application may rely on third-party infrastructure such as hosting, analytics, authentication, storage, and payment-related services needed to operate the platform responsibly.',
-      },
-      {
-        title: 'Customer Requests',
-        body: 'Customers may request clarification, updates, or removal of submitted information by contacting Campbell & Co. through the available concierge or support pathways.',
-      },
-    ]}
-  />
-);
+const PrivacyPage = () => {
+  const { content } = useSiteContent();
+  const page = content.legal.privacy;
+  return (
+    <LegalPage
+      eyebrow={page.eyebrow}
+      title={page.title}
+      intro={page.intro}
+      sections={page.sections}
+    />
+  );
+};
 
-const TermsPage = () => (
-  <LegalPage
-    eyebrow="Terms"
-    title="Terms of Service"
-    intro="These terms describe the general expectations for using the Campbell & Co. storefront, content, and administrative services."
-    sections={[
-      {
-        title: 'Use of the Site',
-        body: 'Visitors may browse the storefront and request services for lawful personal or business purposes. Misuse, unauthorized access attempts, or interference with the platform is prohibited.',
-      },
-      {
-        title: 'Product and Content Presentation',
-        body: 'Campbell & Co. aims to present product details, imagery, availability, and guidance accurately, but offerings, pricing, and availability may change without notice.',
-      },
-      {
-        title: 'Orders and Requests',
-        body: 'Submitting a request or initiating checkout does not guarantee final acceptance. Orders, consultations, and operational actions may require confirmation, review, or follow-up communication.',
-      },
-      {
-        title: 'Platform Governance',
-        body: 'The application is maintained under LeeWay Standards for structured governance, technical continuity, and operational control. Administrative access is restricted to authorized users only.',
-      },
-    ]}
-  />
-);
+const TermsPage = () => {
+  const { content } = useSiteContent();
+  const page = content.legal.terms;
+  return (
+    <LegalPage
+      eyebrow={page.eyebrow}
+      title={page.title}
+      intro={page.intro}
+      sections={page.sections}
+    />
+  );
+};
 
 const BusinessCardPage = () => <div className="pt-40 px-20 text-white font-serif text-4xl text-center pb-20"><img src={publicAssetUrl('/assets/campbell/business-card/card-front.png')} className="max-w-md mx-auto border border-gold" alt="Business Card" /><p className="mt-10 uppercase tracking-[0.5em] text-gold text-[10px]">Digital Artifact</p></div>;
 const AdminRedirect = () => {
@@ -335,41 +300,59 @@ const AdminRedirect = () => {
 };
 
 function Home() {
+  const { content } = useSiteContent();
+  const sortedSections = [...content.layout.homepage].sort((a, b) => a.order - b.order);
+
+  const sectionMap: Record<string, React.ReactNode> = {
+    hero: <Hero key="hero" />,
+    collections: <CollectionSplit key="collections" />,
+    globalAcquisitions: <RecommendationEngine key="globalAcquisitions" type="trending" title="Global Acquisitions" subtitle="Current High Demand" />,
+    promo: <PromoPanel key="promo" />,
+    curatedSelection: <RecommendationEngine key="curatedSelection" type="recommended" title="Curated Selection" subtitle="Based on your profile" />,
+    verification: <VerificationSection key="verification" />,
+    recentlyViewed: <RecommendationEngine key="recentlyViewed" type="recently-viewed" title="Recently Browsed" subtitle="Pick up where you left off" />,
+    trustBar: <TrustBar key="trustBar" />
+  };
+
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-      <Hero />
-      <CollectionSplit />
-      <RecommendationEngine type="trending" title="Global Acquisitions" subtitle="Current High Demand" />
-      <PromoPanel />
-      <RecommendationEngine type="recommended" title="Curated Selection" subtitle="Based on your profile" />
-      <VerificationSection />
-      <RecommendationEngine type="recently-viewed" title="Recently Browsed" subtitle="Pick up where you left off" />
-      <TrustBar />
+    <motion.div 
+      id="home-view" 
+      initial={{ opacity: 0 }} 
+      animate={{ opacity: 1 }} 
+      exit={{ opacity: 0 }}
+      data-leeway-id="public.home"
+      data-leeway-tag="UI.PUBLIC.HOME"
+      data-owner-agent="Aura"
+    >
+      {sortedSections.map(section => section.enabled ? sectionMap[section.id] : null)}
     </motion.div>
   );
 }
 
+import { useLeeWayID } from '../hooks/useLeeWayID';
+
 export default function CustomerSite() {
+  useLeeWayID('CUSTOMER_SITE_ROOT');
   usePageAnalytics();
 
   return (
-    <div className="bg-black-pure min-h-screen selection:bg-gold selection:text-black-pure">
+    <div id="customer-site-root" className="bg-black-pure min-h-screen selection:bg-gold selection:text-black-pure">
       <Header />
       
-      <main>
+      <main id="customer-site-main">
         <AnimatePresence mode="wait">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/shop" element={<div className="pt-32"><ProductGrid /></div>} />
+            <Route path="/shop" element={<div id="shop-view" className="pt-32"><ProductGrid /></div>} />
             
             {/* Gender filtered routes */}
             <Route path="/women" element={<Navigate to="/women/rings" replace />} />
             <Route path="/men" element={<Navigate to="/men/rings" replace />} />
-            <Route path="/:gender/:category" element={<div className="pt-32"><ProductGrid /></div>} />
+            <Route path="/:gender/:category" element={<div id="gender-category-view" className="pt-32"><ProductGrid /></div>} />
             
             {/* Diamond routes */}
-            <Route path="/diamonds" element={<div className="pt-32"><DiamondGuide /></div>} />
-            <Route path="/diamonds/:type" element={<div className="pt-32"><DiamondGuide /></div>} />
+            <Route path="/diamonds" element={<div id="diamond-guide-view" className="pt-32"><DiamondGuide /></div>} />
+            <Route path="/diamonds/:type" element={<div id="diamond-type-view" className="pt-32"><DiamondGuide /></div>} />
             
             {/* Direct access to product */}
             <Route path="/product/:slug" element={<ProductDetailPage />} />

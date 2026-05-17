@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.CHECKOUT.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -39,10 +53,13 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { publicAssetUrl } from '../lib/publicPath';
+import { useSiteContent } from '../hooks/useSiteContent';
 
 export default function Checkout() {
   const navigate = useNavigate();
   const { cartItems, subtotal, clearCart } = useCart();
+  const { content } = useSiteContent();
+  const checkoutText = content.checkout;
   const [step, setStep] = useState<'details' | 'payment' | 'confirmation'>('details');
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'installments' | 'deposit' | 'crypto'>('card');
 
@@ -93,17 +110,17 @@ export default function Checkout() {
               <CheckCircle2 size={40} className="text-gold" />
            </motion.div>
            <div className="space-y-6">
-              <span className="text-[12px] uppercase tracking-[0.8em] text-gold font-black">Transaction Verified</span>
-              <h1 className="text-5xl lg:text-7xl font-serif text-white uppercase tracking-widest leading-tight">Registry Confirmed</h1>
+              <span className="text-[12px] uppercase tracking-[0.8em] text-gold font-black">{checkoutText.confirmationEyebrow}</span>
+              <h1 className="text-5xl lg:text-7xl font-serif text-white uppercase tracking-widest leading-tight">{checkoutText.confirmationTitle}</h1>
               <p className="text-white/40 text-[12px] uppercase tracking-[0.3em] font-light leading-relaxed max-w-lg mx-auto">
-                Your artifacts have been secured in our primary vault. A private acquisition officer will contact you within the hour to coordinate hand-delivery details.
+                {checkoutText.confirmationBody}
               </p>
            </div>
            <button 
             onClick={() => { clearCart(); navigate('/'); }}
             className="px-12 py-6 bg-gold text-black-pure text-[10px] uppercase tracking-[0.5em] font-black hover:bg-white transition-all shadow-[0_10px_40px_rgba(212,175,55,0.2)]"
            >
-             Return to the House
+             {checkoutText.confirmationCta}
            </button>
         </div>
       </motion.div>
@@ -125,8 +142,8 @@ export default function Checkout() {
           </Link>
 
           <div className="space-y-6">
-            <span className="text-[10px] uppercase tracking-[0.8em] text-gold/40 font-black">Acquisition Portal</span>
-            <h1 className="text-5xl lg:text-7xl font-serif text-white uppercase tracking-widest italic">Review Details</h1>
+            <span className="text-[10px] uppercase tracking-[0.8em] text-gold/40 font-black">{checkoutText.detailsEyebrow}</span>
+            <h1 className="text-5xl lg:text-7xl font-serif text-white uppercase tracking-widest italic">{checkoutText.detailsTitle}</h1>
           </div>
 
           <div className="space-y-12">
@@ -171,7 +188,7 @@ export default function Checkout() {
                ) : (
                  <>
                    <div className="md:col-span-2 space-y-6">
-                      <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">Select Payment Route</label>
+                      <label className="text-[8px] uppercase tracking-[0.4em] text-white/30 font-black">{checkoutText.paymentOptionsCaption}</label>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {paymentOptions.map((option) => {
                           const Icon = option.icon;
@@ -289,13 +306,13 @@ export default function Checkout() {
                         </p>
                       )}
                    </div>
-                   <div className="md:col-span-2 pt-10">
+                    <div className="md:col-span-2 pt-10">
                       <div className="bg-gold/5 border border-gold/20 p-8 flex items-start gap-6">
                          <ShieldCheck className="text-gold mt-1" size={24} strokeWidth={1} />
                          <div className="space-y-2">
-                            <span className="text-[9px] uppercase tracking-[0.4em] text-gold font-black">Encrypted Line Secured</span>
+                            <span className="text-[9px] uppercase tracking-[0.4em] text-gold font-black">{checkoutText.securityBadgeTitle}</span>
                             <p className="text-[8px] text-white/40 uppercase tracking-[0.2em] leading-relaxed">
-                                This transaction is protected by the House of Campbell Multi-Sig security protocol. Your data is purged immediately following registry verification.
+                                {checkoutText.securityBadgeBody}
                             </p>
                          </div>
                       </div>
@@ -406,7 +423,7 @@ export default function Checkout() {
            <div className="p-8 border border-gold/5 bg-gold/5 flex gap-6 items-start">
               <Info className="text-gold shrink-0" size={16} />
               <p className="text-[8px] text-white/40 uppercase tracking-[0.2em] leading-relaxed">
-                By authorizing this acquisition, you agree to the House of Campbell Charter, ensuring the legacy of these artifacts for a minimum of one generational cycle.
+                {checkoutText.agreementText}
               </p>
            </div>
         </div>

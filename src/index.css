@@ -3,10 +3,10 @@
 
 @theme {
   --color-gold: #D6B46A;
-  --color-black-pure: #000000;
-  --color-black-soft: #0A0A0A;
-  --color-gray-text: #C9C9C9;
-  --color-gray-border: #2A2A2A;
+  --color-black-pure: #f5f1e9;
+  --color-black-soft: #f8f5ef;
+  --color-gray-text: #4f463b;
+  --color-gray-border: #d8cfbf;
   
   --font-serif: "Playfair Display", serif;
   --font-sans: "Inter", sans-serif;
@@ -14,7 +14,7 @@
 
 @layer base {
   body {
-    @apply bg-black-pure text-white antialiased selection:bg-gold selection:text-black-pure;
+    @apply bg-black-pure text-stone-900 antialiased selection:bg-gold selection:text-white;
   }
 }
 
@@ -41,10 +41,10 @@
   width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #000;
+  background: #f4efe6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1a1a1a;
+  background: #d6c8b0;
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {

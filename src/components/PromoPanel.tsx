@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#FF3131
+FLUO=#FF5757
+PASTEL=#FF9191
+
+ICON_ASCII:
+family=lucide
+glyph=layout
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: UI
 TAG: UI.SRC.COMPONENTS.PROMO_PANEL.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -23,14 +37,33 @@ import { Link } from 'react-router-dom';
 import { ShieldCheck, Award, Truck, RotateCcw, Calendar } from 'lucide-react';
 import { useSiteContent } from '../hooks/useSiteContent';
 import { publicAssetUrl } from '../lib/publicPath';
+import { useLeeWayID } from '../hooks/useLeeWayID';
 
 export default function PromoPanel() {
+  useLeeWayID({
+    id: 'public.home.promo',
+    label: 'Homepage Promotions',
+    tag: 'UI.PUBLIC.HOME.PROMO',
+    region: 'PUBLIC',
+    ownerAgent: 'Aura',
+    authority: 'AdminOS',
+    tracePath: ['AdminOS', 'SiteContent', 'Published', 'CustomerSite', 'PromoPanel'],
+    auditCategory: 'content.publish',
+    status: 'active',
+    hardCoded: false,
+  });
+
   const { content } = useSiteContent();
   const promo = content.home.promo;
   const usesVideo = promo.feature.mediaType === 'video' && Boolean(promo.feature.videoUrl);
 
   return (
-    <div className="space-y-10 sticky top-32">
+    <div 
+      className="space-y-10 sticky top-32"
+      data-leeway-id="public.home.promo"
+      data-leeway-tag="UI.PUBLIC.HOME.PROMO"
+      data-owner-agent="Aura"
+    >
       {/* Hero Promo */}
       <div className="border border-gold bg-[#050505] overflow-hidden group relative">
         <div className="relative aspect-[4/5] overflow-hidden">

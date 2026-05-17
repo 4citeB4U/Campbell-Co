@@ -1,6 +1,20 @@
 /*
 LEEWAY HEADER — DO NOT REMOVE
 
+COLOR_ONION_HEX:
+NEON=#39FF14
+FLUO=#0DFF94
+PASTEL=#C7FFD8
+
+ICON_ASCII:
+family=lucide
+glyph=cpu
+
+AGENTS:
+ASSESS
+ALIGN
+AUDIT
+
 REGION: CORE
 TAG: CORE.SRC.CONTEXT.PRODUCT_EXPERIENCE_CONTEXT.MAIN
 DESCRIPTION: Auto-enforced by LeeWay Standards Enforcement Engine
@@ -20,7 +34,7 @@ LICENSE: PROPRIETARY
 */
 import React, { createContext, useContext, ReactNode } from 'react';
 import { Product } from '../types';
-import { MASTER_PRODUCTS } from '../constants';
+import { useProducts } from '../hooks/useProducts';
 
 interface ProductExperienceContextType {
   products: Product[];
@@ -29,9 +43,10 @@ interface ProductExperienceContextType {
 const ProductExperienceContext = createContext<ProductExperienceContextType | undefined>(undefined);
 
 export function ProductExperienceProvider({ children }: { children: ReactNode }) {
+  const { products } = useProducts();
   return (
     <ProductExperienceContext.Provider value={{ 
-      products: MASTER_PRODUCTS, 
+      products, 
     }}>
       {children}
     </ProductExperienceContext.Provider>
