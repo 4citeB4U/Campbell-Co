@@ -809,10 +809,13 @@ export default function AdminPortal() {
                   <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                   <span className="text-[8px] uppercase tracking-widest text-stone-500">System Live</span>
                </div>
-               <button onClick={() => setActiveSection('products')} className="p-2 text-stone-500 hover:text-stone-900 transition-colors">
+               <button onClick={() => setActiveSection('products')} className="p-2 text-stone-500 hover:text-stone-900 transition-colors hidden md:block">
                   <Search size={18} />
                </button>
-               <button className="lg:hidden w-8 h-8 rounded-full border border-stone-200 flex items-center justify-center overflow-hidden">
+               <button onClick={() => setPreviewCollapsed(!previewCollapsed)} className="lg:hidden p-2 text-stone-500 hover:text-stone-900 transition-colors" title="Toggle Live Preview">
+                  {previewCollapsed ? <Eye size={20} /> : <EyeOff size={20} />}
+               </button>
+               <button className="hidden lg:flex w-8 h-8 rounded-full border border-stone-200 items-center justify-center overflow-hidden">
                   <img src={user.photoURL || ''} alt="" className="w-full h-full object-cover grayscale" />
                </button>
             </div>

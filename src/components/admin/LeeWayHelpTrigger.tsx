@@ -45,7 +45,7 @@ type LeeWayHelpTriggerProps = {
   className?: string;
 };
 
-export function LeeWayHelpTrigger({ helpId, label = 'What does this do?', className = '' }: LeeWayHelpTriggerProps) {
+export function LeeWayHelpTrigger({ helpId, label = '', className = '' }: LeeWayHelpTriggerProps) {
   const [open, setOpen] = useState(false);
   const helpItem = useMemo(() => getHelpItem(helpId), [helpId]);
   const manualSection = useMemo(() => (helpItem ? getManualSection(helpItem.manualSectionId) : undefined), [helpItem]);
@@ -64,10 +64,11 @@ export function LeeWayHelpTrigger({ helpId, label = 'What does this do?', classN
         type="button"
         onClick={() => setOpen(true)}
         data-leeway-help-id={helpId}
-        className={`inline-flex items-center gap-1 rounded-full border border-stone-200 bg-white px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-stone-500 transition hover:border-amber-300 hover:text-amber-700 ${className}`}
+        title={label || 'Help Information'}
+        className={`inline-flex items-center justify-center gap-1 rounded-full border border-stone-200 bg-white p-2 text-stone-500 transition hover:border-amber-300 hover:text-amber-700 ${className}`}
       >
-        <HelpCircle size={12} />
-        <span>{label}</span>
+        <HelpCircle size={14} />
+        {label && <span className="text-[10px] font-black uppercase tracking-widest px-1">{label}</span>}
       </button>
 
       {open && (

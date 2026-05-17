@@ -312,18 +312,18 @@ export function LivePublicPreview({
       data-leeway-screen-id="ADMIN_PORTAL"
       data-leeway-workflow-id="workflow.onboarding.first_launch"
       data-leeway-owner-agent="aura-media-agent"
-      className={`border-l border-stone-200 bg-[#fbf9f6] flex flex-col shrink-0 transition-all duration-500 overflow-hidden z-40 ${
-      isFullscreen ? 'fixed inset-0 w-screen h-screen' : isExpanded ? 'w-[75%] lg:w-[65%]' : 'w-[45%] xl:w-[40%]'
+      className={`border-l border-stone-200 bg-[#fbf9f6] flex flex-col shrink-0 transition-all duration-500 overflow-hidden z-[150] ${
+      isFullscreen ? 'fixed inset-0 w-screen h-screen' : isExpanded ? 'fixed inset-0 lg:relative lg:w-[65%] w-full h-full lg:h-auto' : 'fixed inset-0 lg:relative lg:w-[40%] w-full h-full lg:h-auto'
     }`}
     >
       {/* 1. Header Toolbar */}
-      <div className="h-16 px-6 border-b border-stone-200 bg-[#f8f5ef] flex items-center justify-between shrink-0 select-none">
-        <div className="flex items-center gap-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-stone-900 text-white">
+      <div className="h-auto min-h-[4rem] px-4 py-3 border-b border-stone-200 bg-[#f8f5ef] flex flex-wrap items-center justify-between gap-4 shrink-0 select-none">
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-stone-900 text-white shrink-0">
             <Eye size={16} />
           </div>
           <div>
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-900">Live Storefront Projection</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-900 leading-tight">Live Storefront Projection</h3>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className={`h-1.5 w-1.5 rounded-full ${mode === 'draft' ? 'bg-amber-500 animate-pulse' : 'bg-green-500'}`} />
               <span className="text-[8px] uppercase tracking-wider font-bold text-stone-400">
@@ -331,16 +331,18 @@ export function LivePublicPreview({
               </span>
             </div>
           </div>
-          <LeeWayHelpTrigger helpId="help.ui.openLivePreview" />
+          <div className="ml-2 hidden sm:block">
+            <LeeWayHelpTrigger helpId="help.ui.openLivePreview" />
+          </div>
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {/* Mode Switcher */}
-          <div className="bg-stone-200/60 rounded-full p-0.5 flex gap-0.5 shadow-inner">
+          <div className="bg-stone-200/60 rounded-full p-0.5 flex gap-0.5 shadow-inner shrink-0">
             <button
               onClick={() => setMode('draft')}
-              className={`rounded-full px-3.5 py-1.5 text-[8px] font-black uppercase tracking-wider transition-all ${
+              className={`rounded-full px-3 py-1.5 text-[8px] font-black uppercase tracking-wider transition-all ${
                 mode === 'draft' ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-500 hover:text-stone-800'
               }`}
             >
@@ -348,7 +350,7 @@ export function LivePublicPreview({
             </button>
             <button
               onClick={() => setMode('published')}
-              className={`rounded-full px-3.5 py-1.5 text-[8px] font-black uppercase tracking-wider transition-all ${
+              className={`rounded-full px-3 py-1.5 text-[8px] font-black uppercase tracking-wider transition-all ${
                 mode === 'published' ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-500 hover:text-stone-800'
               }`}
             >
@@ -358,7 +360,7 @@ export function LivePublicPreview({
           <LeeWayHelpTrigger helpId={mode === 'draft' ? 'help.ui.draftPreview' : 'help.ui.publishedPreview'} label={mode === 'draft' ? 'Draft Preview' : 'Published Preview'} />
 
           {/* Route Dropdown Selector */}
-          <div className="relative group">
+          <div className="relative group shrink-0">
             <select
               value={currentRoute}
               onChange={(e) => setCurrentRoute(e.target.value)}
@@ -372,25 +374,24 @@ export function LivePublicPreview({
           </div>
 
           {/* Device Selection */}
-          <div className="border-l border-stone-250 h-5" />
-          <div className="flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-1 shrink-0">
             <button 
               onClick={() => setDevice('desktop')}
-              className={`p-2 rounded-lg transition ${device === 'desktop' ? 'bg-stone-200 text-stone-900' : 'text-stone-400 hover:text-stone-600'}`}
+              className={`p-1.5 rounded-lg transition ${device === 'desktop' ? 'bg-stone-200 text-stone-900' : 'text-stone-400 hover:text-stone-600'}`}
               title="Desktop View"
             >
               <Monitor size={14} />
             </button>
             <button 
               onClick={() => setDevice('tablet')}
-              className={`p-2 rounded-lg transition ${device === 'tablet' ? 'bg-stone-200 text-stone-900' : 'text-stone-400 hover:text-stone-600'}`}
+              className={`p-1.5 rounded-lg transition ${device === 'tablet' ? 'bg-stone-200 text-stone-900' : 'text-stone-400 hover:text-stone-600'}`}
               title="Tablet View"
             >
               <Tablet size={14} />
             </button>
             <button 
               onClick={() => setDevice('mobile')}
-              className={`p-2 rounded-lg transition ${device === 'mobile' ? 'bg-stone-200 text-stone-900' : 'text-stone-400 hover:text-stone-600'}`}
+              className={`p-1.5 rounded-lg transition ${device === 'mobile' ? 'bg-stone-200 text-stone-900' : 'text-stone-400 hover:text-stone-600'}`}
               title="Mobile View"
             >
               <Smartphone size={14} />
@@ -398,41 +399,30 @@ export function LivePublicPreview({
           </div>
 
           {/* Action buttons */}
-          <div className="border-l border-stone-250 h-5" />
-          <button 
-            onClick={() => setRefreshKey(k => k + 1)}
-            className="p-2 text-stone-400 hover:text-stone-600 rounded-lg hover:bg-stone-100 transition"
-            title="Refresh Projection DOM"
-          >
-            <RefreshCw size={14} />
-          </button>
-          <button 
-            onClick={() => {
-              if (isFullscreen) {
-                setIsFullscreen(false);
-              } else {
-                onToggleExpand();
-              }
-            }}
-            className="p-2 text-stone-400 hover:text-stone-600 rounded-lg hover:bg-stone-100 transition"
-            title={isExpanded ? "Restore panel size" : "Expand panel"}
-          >
-            <Maximize2 size={14} />
-          </button>
-          <button 
-            onClick={() => setIsFullscreen(!isFullscreen)}
-            className="p-2 text-stone-400 hover:text-stone-600 rounded-lg hover:bg-stone-100 transition"
-            title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Preview"}
-          >
-            {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
-          </button>
-          <button 
-            onClick={onToggleCollapse}
-            className="p-2 text-stone-400 hover:text-stone-600 rounded-lg hover:bg-stone-100 transition"
-            title="Hide panel"
-          >
-            <EyeOff size={14} />
-          </button>
+          <div className="flex items-center gap-1 shrink-0">
+            <button 
+              onClick={() => setRefreshKey(k => k + 1)}
+              className="p-1.5 text-stone-400 hover:text-stone-600 rounded-lg hover:bg-stone-100 transition"
+              title="Refresh Projection DOM"
+            >
+              <RefreshCw size={14} />
+            </button>
+            <button 
+              onClick={() => setIsFullscreen(!isFullscreen)}
+              className="hidden lg:block p-1.5 text-stone-400 hover:text-stone-600 rounded-lg hover:bg-stone-100 transition"
+              title={isFullscreen ? "Exit Fullscreen" : "Fullscreen Preview"}
+            >
+              {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+            </button>
+            <button 
+              onClick={onToggleCollapse}
+              className="p-1.5 text-stone-900 hover:bg-stone-200 bg-stone-100 rounded-lg transition flex items-center justify-center"
+              title="Close Panel"
+            >
+              <X size={16} className="lg:hidden" />
+              <EyeOff size={16} className="hidden lg:block" />
+            </button>
+          </div>
         </div>
       </div>
 
