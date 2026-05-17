@@ -1,207 +1,94 @@
-# Campbell & Co.
+# Campbell & Co. - LeeWay AdminOS
 
-Campbell & Co. is a governed luxury-commerce application built for a modern jewelry house. It combines a branded customer storefront with an internal operating portal for product management, content control, orders, members, procurement, media, and partner workflows.
+Welcome to the Campbell & Co. AdminOS. This application is fundamentally split between the **Owner/AdminOS Interface** and the **Customer Storefront Projection**. This document serves as the complete Owner's Manual and architectural guide to help you manage the storefront, your AI workforce, and all underlying system settings.
 
-This repository is not presented as a generic open-source starter. It represents a production-oriented application shaped by LeeWay Standards, with structure, file governance, deployment discipline, and runtime behavior designed to support a controlled brand system rather than a casual demo project.
+## 1. Opening the AdminOS
+When running locally, navigate to `http://localhost:3000/admin.html`. Once authenticated, you will arrive at the **Dashboard** which serves as the core command interface.
 
-## Application Overview
+## 2. Changing Colors and Theme
+- Navigate to **Vault Settings** (using the sidebar gear icon).
+- Open the **Experience Theme** tab.
+- Click on the `Primary Color` or `Accent Color` swatches. Any selection made here instantly syncs across the admin interface and the public website preview.
 
-The application is composed of two connected experiences:
+## 3. Using Live Preview & Editing Homepage Sections
+- The right side of the AdminOS screen contains the **Live Storefront Preview**. 
+- You can navigate the preview website just like a customer.
+- **To edit a section:** Click directly on a highlighted block of text or a button within the preview. 
+- A panel will open allowing you to edit the draft text. Your edits are immediately visible in the preview, but are **not live to the public yet**.
 
-- A public storefront for browsing collections, exploring product detail pages, reviewing diamond guidance, and moving through a luxury-inspired shopping journey.
-- A private admin portal for managing the operational side of the business, including products, content, orders, members, procurement, partner integrations, and site control.
+## 4. Asking Agents for Help & Reviewing Proposals
+- Open the **AI Workforce** section from the sidebar.
+- Select an Agent (e.g., *Agent Lee Prime*, *Aura Media Agent*).
+- Under the agent's active recommendations, click the **"Preview Proposal"** button.
+- **Reviewing the Proposal:** A modal will appear. It clearly details exactly what the agent wants to change (before/after values), the reason, and the risk level. **No changes happen until you approve.**
+- **Apply to Draft:** Click this to accept the agent's proposal. The changes will populate the Live Preview.
+- **Reject:** Click this if you do not want the agent to make the change.
 
-Together, these surfaces form a lightweight commerce operating system for Campbell & Co., balancing presentation, governance, and day-to-day administration.
+## 5. Publishing to the Live Site
+- Whenever you make manual draft edits or accept an agent's proposal, those changes are stored locally.
+- To make them public, go to the **Publishing Console** from the sidebar.
+- Review the comparison of your draft against the live site.
+- If everything looks correct, click **Commit to Production**.
 
-## Core Experiences
+## 6. Inspecting System Health (Agents & MCPs)
+- **Agent Health:** Inside the **AI Workforce** tab, select an agent to see their live telemetry feed, designated skills, and current operational mode.
+- **MCP/Tool Health:** Inside **Vault Settings**, click the **MCP & Integrations** tab. Here you will see all third-party services (e.g., Stripe, GitHub) and whether they are active (Green), missing configuration (Amber), or blocked (Red).
 
-### Customer Storefront
+## 7. Understanding Growth Lanes
+Inside **Vault Settings**, view the **Growth Lanes** tab to see what you are authorized to change safely:
+- 🟢 **Green Lane:** Safe, unlocked customization (copywriting, themes).
+- 🟡 **Yellow Lane:** Requires adding new API keys or expanding the system (adding new AI models).
+- 🔴 **Red Lane:** Locked core-system changes to protect against security risks.
 
-The storefront is designed to communicate a premium brand identity while remaining practical and conversion-oriented. It includes:
+## 8. What to do if something is blocked
+If you see an action is blocked, check the **Runtime Authority** banner at the top of the PIM/Registry or Publishing screen. If it says "Setup Required" or "Read-Only Mode", your developer needs to configure your secure `.env` database credentials before you can proceed.
 
-- Branded landing and collection experiences
-- Product discovery and category navigation
-- Product detail pages with storytelling and specification support
-- Diamond education and verification-oriented messaging
-- Contact and concierge pathways
-- About, FAQ, journal, and supporting brand pages
+---
 
-### Admin Portal
+## Architecture & Where Things Live
 
-The admin portal functions as the internal control layer of the application. It includes operational modules for:
+### Public vs Admin Projection
+The application uses a dual-routing strategy:
+- The **Public Storefront** renders traditionally at `http://localhost:3000/` for standard visitors.
+- The **AdminOS** mounts at `http://localhost:3000/admin.html` and operates as a unified command center. 
+- The AdminOS embeds the public storefront internally using a `LivePublicPreview` (via `MemoryRouter`), allowing the owner to make draft CMS mutations and instantly visualize the impact on the client-facing website without altering the production database.
 
-- Dashboard and command-center views
-- Product registry and inventory management
-- Orders and member records
-- AI workforce and agent task surfaces
-- Procurement and marketplace workflows
-- Media and site-content management
-- Settings, privacy, and operational controls
+### Core Architecture
+#### 1. Where Laws Live
+- **`src/core/leeway/LeeWayLawSet.ts`**: The canonical registry of the 18 LeeWay laws.
+- **`src/core/leeway/LeeWayAgentProposal.ts`**: The contract enforcing LAW-0005 (Proposal-Before-Mutation).
+- **`.leeway/scripts/compliance-check.mjs`**: The CI/CD script that enforces these laws during builds.
 
-Where Firebase is configured, the application can connect to live services. Where it is not configured, parts of the experience gracefully fall back to local or seeded data so development can continue without blocking the interface.
+#### 2. Where Registries Live
+- **Agent Capabilities:** `src/core/leeway/LeeWayAgentCapabilityRegistry.ts` (Maps capabilities to Growth Lanes).
+- **Skills:** `src/core/leeway/LeeWaySkillRegistry.ts` (Maps agent actions to laws).
+- **Integrations/MCPs:** `src/core/leeway/LeeWayMCPRegistry.ts` (Maps external tool dependencies to truthful capability states).
 
-## Technology Stack
+#### 3. Where Agents Live
+- **`src/components/admin/AdminAgents.tsx`**: The main interface for interacting with the AI workforce.
+- Agent metadata and visual telemetry streams are governed by the registries above, producing proposals that the owner reviews directly via the UI.
 
-The application is built with:
+#### 4. Where MCPs Live
+- **`src/components/admin/AdminSettings.tsx`**: (MCP & Integrations Tab) Visually exposes the status of all configured or missing MCP connections.
 
-- React 19
-- TypeScript
-- Vite
-- React Router
-- Tailwind CSS
-- Motion
-- Firebase
+---
 
-This stack supports a fast client-rendered application with multiple entry points, clean local development, and straightforward GitHub Pages deployment for the storefront experience.
+## Developer Commands
 
-## Project Structure
-
-At a high level, the repository is organized around these concerns:
-
-- `src/apps`
-  Contains the main application shells for the customer storefront and admin portal.
-- `src/components`
-  Houses shared UI components and admin-specific modules.
-- `src/content`
-  Stores default editable content used by the storefront and content-management flows.
-- `src/hooks`
-  Provides application state and behavior, including products, admin data, analytics, and site content.
-- `src/lib`
-  Contains shared helpers such as Firebase setup and public-path handling.
-- `public`
-  Stores static assets delivered directly by the app.
-- `.leeway`
-  Contains governance scripts and compliance tooling used to enforce LeeWay Standards.
-
-## LeeWay Standards
-
-LeeWay Standards are part of the operating model of this repository, not a decorative footer or branding note. They define how the application is governed at the file, structural, and compliance level.
-
-In practical terms, LeeWay Standards provide:
-
-- File identity headers for governed source files
-- Consistent 5WH metadata describing purpose, authority, location, and implementation context
-- Compliance scripts for validating repository standards
-- A structured approach to architectural continuity across modules
-- A predictable discipline for extending the application without drifting into untracked patterns
-
-This matters because the application is meant to be maintained as a controlled system. The standards help preserve context, make intent readable, and keep implementation decisions aligned over time.
-
-## Local Development
-
-### Prerequisites
-
-- Node.js 18 or newer
-- npm
-
-### Installation
-
+### Installation & Run
 ```bash
 npm install
-```
-
-### Start the Application
-
-```bash
 npm run dev
 ```
 
-By default, local development runs on:
+### Quality Checks
+1. **Type Checking:** `npm run lint`
+2. **Build Validation:** `npm run build`
+3. **LeeWay Governance Audit:** `npm run leeway:audit` (Must return "✅ SYSTEM IS SOVEREIGN AND COMPLIANT" before pushing to production.)
 
-- Storefront: `http://localhost:3000/`
-- Admin portal: `http://localhost:3000/admin.html`
-
-If port `3000` is unavailable, Vite may offer the next available port.
-
-## Environment Configuration
-
-The application can run without a live Firebase connection for portions of local development, but production-ready operation should use a valid environment file.
-
-Create a local `.env` file based on `.env.example` and provide the appropriate values:
-
-```bash
-CAMPBELL_APP_URL="http://localhost:3000"
-VITE_FIREBASE_PROJECT_ID="your-project-id"
-VITE_FIREBASE_APP_ID="your-app-id"
-VITE_FIREBASE_API_KEY="your-browser-api-key"
-VITE_FIREBASE_AUTH_DOMAIN="your-project.firebaseapp.com"
-VITE_FIREBASE_STORAGE_BUCKET="your-project.firebasestorage.app"
-VITE_FIREBASE_MESSAGING_SENDER_ID="your-sender-id"
-VITE_FIREBASE_MEASUREMENT_ID=""
-```
-
-Optional deployment path overrides:
-
-```bash
-VITE_PUBLIC_BASE_PATH="/"
-```
-
-This can be used when you need to force a specific public base path during build or deployment.
-
-## Quality and Governance Checks
-
-Before shipping or deploying changes, run:
-
-```bash
-npm run lint
-npm run build
-npm run leeway:compliance
-```
-
-If you add new governed files and need headers applied automatically, run:
-
-```bash
-npm run leeway:headers
-```
-
-## Build and Deployment
-
-### Standard Production Build
-
-```bash
-npm run build
-```
-
-### GitHub Pages Build
-
+### Deployment
+To deploy to GitHub pages, execute:
 ```bash
 npm run build:pages
 ```
-
-This creates `dist/404.html` alongside the main build output so client-side routes can continue working when the storefront is hosted on GitHub Pages.
-
-### GitHub Pages Workflow
-
-The repository includes `.github/workflows/pages.yml` for GitHub Pages deployment.
-
-The deployment flow:
-
-- installs dependencies
-- runs LeeWay compliance
-- runs TypeScript validation
-- builds the application
-- prepares SPA fallback behavior for route refreshes
-- uploads the `dist` folder as the deployment artifact
-
-The Vite configuration resolves its production base path in the following order:
-
-- `VITE_PUBLIC_BASE_PATH`
-- `BASE_PATH`
-- `CAMPBELL_APP_URL`
-- `GITHUB_REPOSITORY`
-- `/`
-
-This allows the same application to build correctly for repository-based Pages deployments or root-domain hosting with minimal adjustment.
-
-## Operating Notes
-
-- The storefront and admin portal are separate entry points within the same application build.
-- Firebase-backed features become fully operational when valid credentials are supplied.
-- Some modules intentionally degrade gracefully in local development to preserve usability while infrastructure is incomplete.
-- LeeWay governance files and headers should be preserved when editing governed modules.
-
-## Summary
-
-Campbell & Co. is a branded commerce application with a governed codebase, not a default starter project. Its purpose is to support both the customer-facing luxury storefront and the internal administrative system required to operate that storefront with consistency, control, and professional presentation.
-
-The README should reflect that same standard: clear, structured, and representative of the application as a real product system.
+*(This script builds the app to `./dist` with relative paths mapped for GH pages, then pushes it to the `gh-pages` branch).*
