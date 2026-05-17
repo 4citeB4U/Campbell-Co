@@ -15,6 +15,7 @@
     "leeway:audit": "node ./.leeway/scripts/compliance-check.mjs .",
     "leeway:align": "node ./.leeway/scripts/auto-enforce-file-governance.mjs --root . --apply",
     "leeway:doctor": "node ./.leeway/scripts/compliance-check.mjs .",
+    "leeway:compliance": "node ./.leeway/scripts/compliance-check.mjs .",
     "leeway:headers": "npm run leeway:align"
   },
   "dependencies": {
