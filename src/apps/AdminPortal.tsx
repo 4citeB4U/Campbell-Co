@@ -60,6 +60,11 @@ import {
   UserRound,
   Trash2,
   Eye,
+  EyeOff,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
   ShieldAlert
 } from 'lucide-react';
 import { auth, signInWithGoogle, db } from '../lib/firebase';
@@ -148,6 +153,7 @@ export default function AdminPortal() {
   const [loadingAuth, setLoadingAuth] = useState(true);
   const [activeSection, setActiveSection] = useState<AdminSection>('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [ownerProfile, setOwnerProfile] = useState(DEFAULT_OWNER_PROFILE);
 
   // Governed proposal state (LAW-0005)
@@ -694,7 +700,7 @@ export default function AdminPortal() {
     <div id="admin-portal-root" className="min-h-screen bg-stone-100 text-stone-900 flex flex-col lg:flex-row lg:h-screen overflow-x-hidden">
       
       {/* Sidebar - Desktop */}
-      <aside className="hidden lg:flex w-72 bg-[#f8f5ef] border-r border-stone-200 flex-col shrink-0">
+      <aside className={`hidden lg:flex ${sidebarCollapsed ? 'w-0 overflow-hidden' : 'w-72'} bg-[#f8f5ef] border-r border-stone-200 flex-col shrink-0 transition-all duration-300`}>
          <div className="p-8 border-b border-stone-200 flex items-center gap-5">
             <div className="relative group">
                <div className="w-10 h-10 border border-amber-600/40 flex items-center justify-center rotate-45 group-hover:rotate-0 transition-all duration-700">
@@ -786,12 +792,17 @@ export default function AdminPortal() {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 bg-stone-100">
          {/* Header */}
-         <header className="h-20 bg-[#f8f5ef] border-b border-stone-200 flex items-center justify-between px-4 lg:px-12 shrink-0 z-50 sticky top-0">
-            <div className="flex items-center gap-6">
-               <button className="lg:hidden p-2 -ml-2" onClick={() => setMobileMenuOpen(true)}>
+         <header className="h-20 bg-[#f8f5ef] border-b border-stone-200 flex items-center justify-between px-4 lg:px-6 shrink-0 z-50 sticky top-0">
+            <div className="flex items-center gap-4">
+               {/* Mobile Sidebar Toggle */}
+               <button className="lg:hidden p-2 -ml-2 text-stone-500" onClick={() => setMobileMenuOpen(true)}>
                   <Menu size={20} />
                </button>
-               <h2 className="text-[12px] uppercase tracking-[0.6em] font-black text-stone-900">
+               {/* Desktop Sidebar Toggle */}
+               <button className="hidden lg:block p-2 -ml-2 text-stone-500 hover:text-stone-900 transition-colors" onClick={() => setSidebarCollapsed(!sidebarCollapsed)} title="Toggle Left Menu">
+                  {sidebarCollapsed ? <PanelLeftOpen size={20} /> : <PanelLeftClose size={20} />}
+               </button>
+               <h2 className="text-[12px] uppercase tracking-[0.6em] font-black text-stone-900 hidden sm:block">
                  {navItems.find(i => i.id === activeSection)?.label}
                </h2>
             </div>
@@ -812,8 +823,8 @@ export default function AdminPortal() {
                <button onClick={() => setActiveSection('products')} className="p-2 text-stone-500 hover:text-stone-900 transition-colors hidden md:block">
                   <Search size={18} />
                </button>
-               <button onClick={() => setPreviewCollapsed(!previewCollapsed)} className="lg:hidden p-2 text-stone-500 hover:text-stone-900 transition-colors" title="Toggle Live Preview">
-                  {previewCollapsed ? <Eye size={20} /> : <EyeOff size={20} />}
+               <button onClick={() => setPreviewCollapsed(!previewCollapsed)} className="p-2 text-stone-500 hover:text-stone-900 transition-colors" title="Toggle Live Preview Pane">
+                  {previewCollapsed ? <PanelRightOpen size={20} /> : <PanelRightClose size={20} />}
                </button>
                <button className="hidden lg:flex w-8 h-8 rounded-full border border-stone-200 items-center justify-center overflow-hidden">
                   <img src={user.photoURL || ''} alt="" className="w-full h-full object-cover grayscale" />
